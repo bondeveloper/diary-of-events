@@ -1,2 +1,3 @@
-# diary-of-events
-Application to keep track of the events that I have done
+# Diary of Events
+
+This is a react application that managed a series of events. The MVP will be the management of workouts.
