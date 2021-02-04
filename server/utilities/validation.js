@@ -37,12 +37,14 @@ const workoutValidation = data => {
     return schema.validate( data );
 }
 
-const workSessionValidation = data => {
+const workoutSessionValidation = data => {
     const schema = Joi.object({
-        start: Joi.date().required(),
-        end: Joi.date().required(),
+        start: Joi.date(),
+        end: Joi.date(),
         weight: Joi.number().required(),
-        weight_measure: Joi.string().required(),
+        weight_unit: Joi.string().required(),
+        waist: Joi.number(),
+        waist_unit: Joi.string(),
     });
 
     return schema.validate( data );
@@ -52,4 +54,4 @@ const workSessionValidation = data => {
 module.exports.signupValidation  = signupValidation;
 module.exports.signinValidation  = signinValidation;
 module.exports.workoutValidation  = workoutValidation;
-module.exports.workSessionValidation  = workSessionValidation;
+module.exports.workoutSessionValidation  = workoutSessionValidation;

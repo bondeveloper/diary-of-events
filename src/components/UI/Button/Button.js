@@ -1,5 +1,6 @@
 import React from 'react';
 import classes from './Button.module.css';
+import Button from 'react-bootstrap/Button';
 
 const button = props => {
     switch ( props.type ) {
@@ -7,11 +8,10 @@ const button = props => {
 
     }
     return (
-        <button 
-            className={ [classes.Button, classes[props.type] ].join(' ')}
+        <Button variant='danger'         
             onClick={props.clicked}>
             {props.children}
-        </button>
+        </Button>
     )
 }
 

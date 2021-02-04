@@ -3,14 +3,20 @@ import { updateObject } from '../../shared/utility';
 
 const initialState = {
     token: null,
-    loading: false
+    redirect: '/'
 }
 
 const signinSuccess = ( state, action ) => {
-    return updateObject ( state, { token: action.token, loading: action.loading });
+    return updateObject ( state, { 
+        token: action.token,
+        redirect: action.redirect
+    });
 }
 const signoutSuccess = ( state, action ) => {
-    return updateObject( state, { token: null})
+    return updateObject( state, {
+        token: null,
+        redirect: action.redirect
+    });
 }
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {

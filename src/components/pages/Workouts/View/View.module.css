@@ -1,0 +1,12 @@
+.View {
+    margin: 50px 50px 34px 45px;
+}
+.Title {
+    display: block;
+}
+
+.Title span{ 
+    display: block;
+    margin-top: 30px;
+    text-align: justify;
+}

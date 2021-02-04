@@ -14,7 +14,7 @@ const accountsRoute = require('./server/routes/accounts');
 app.use('/api/accounts', accountsRoute);
 app.use('/api/workouts', require('./server/routes/workouts'));
 
-const port = process.env.PORT || 8080;
+const port = process.env.API_PORT || 8080;
 
 // Connect to Db
 mongoose.connect(

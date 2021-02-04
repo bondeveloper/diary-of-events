@@ -1,13 +1,15 @@
 .Input {
     padding: 10px;
     box-sizing: border-box;
+    display: block;
 }
 
 .Label {
     font-weight: bold;
     display: block;
-    width: 100%;
+    width: 50%;
     margin: 0 8px 9px 0;
+    text-align: left;
 }
 
 .Element {
@@ -19,4 +21,11 @@
     display: block;
     box-sizing: border-box;
     width: 100%;
+}
+
+@media (min-width: 500px) {
+    .Input {
+        display: flex;
+    }
+    
 }

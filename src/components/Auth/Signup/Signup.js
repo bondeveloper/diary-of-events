@@ -1,40 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Button from 'react-bootstrap/Button';
+
 import * as actions from '../../../store/actions/index';
-import Input from '../../UI/Input/Input';
-import Button from '../../UI/Button/Button';
-import { updateObject, mapKeyToValue } from '../../../shared/utility';
+import { formObjectToArray, mapKeyToValue } from '../../../shared/utility';
+import { signupForm, formInputChanged} from '../../../shared/form-utility';
 
 import classes from './Signup.module.css';
+import { Form } from 'react-bootstrap';
 
 class Signup extends Component {
     state = {
-        form: {
-            email: {
-                type: 'input',
-                config: {
-                    type: 'email',
-                    placeholder: 'email'
-                },
-                value: '',
-                label: 'Email'
-            },
-            password: {
-                type: 'input',
-                config: {
-                    type: 'password',
-                    placeholder: 'password'
-                },
-                value: '',
-                label: 'Password'
-            }
-        }
+        form: signupForm
     }
 
     inputChangedHandler = (event, key) => {
-        const updatedFormElement = updateObject(this.state.form[key], { value: event.target.value});
-        const updatedForm = updateObject(this.state.form, { [key]: updatedFormElement });
-        this.setState({ form: updatedForm });
+        this.setState({ form: formInputChanged( this.state.form, event, key) });
     }
 
     onSignupHandler = ( event ) => {
@@ -43,34 +24,26 @@ class Signup extends Component {
     }
 
     render () {
-        let formElements = [];
-        for ( let key in this.state.form) {
-            formElements.push({
-                key: key,
-                settings: this.state.form[key]
-            })
-        }
-
-        let form = formElements.map( ele => {
-            return <Input
-                key={ele.key}
-                type={ele.settings.type}
-                config={ele.settings.config}
-                value={ele.settings.value}
-                label={ele.settings.label}
-                changed={ event => this.inputChangedHandler( event, ele.key)}
-                />
+        let form = formObjectToArray( this.state.form ).map( ele => {
+            return (
+                <Form.Group controlId={ ele.key } key={ ele.key }>
+                    <Form.Label> { ele.settings.label }</Form.Label>
+                    <Form.Control 
+                        type={ ele.settings.type } 
+                        placeholder={ ele.settings.config.placeholder }
+                        onChange={ event => this.inputChangedHandler( event, ele.key)}/> />
+                </Form.Group>
+            )
 
         });
 
-
         return (
-            <div>
+            <div className={classes.Signup}>
                 <form>
                     {form}
                     <div className={classes.Buttons}>
-                        <Button type='Success' clicked={this.onSignupHandler}>Signup</Button>
-                        <Button type='Cancel'>Cancel</Button>
+                        <Button variant='danger' clicked={this.onSignupHandler}>Signup</Button>
+                        <Button variant='secondary'>Cancel</Button>
                     </div>
                 </form>
             </div>
@@ -80,7 +53,7 @@ class Signup extends Component {
 
 const mapStateToProps = state => {
     return {
-        isAuth: state.signin.token !== null
+        isAuth: state.signin.token !== null,
     };
 };
 

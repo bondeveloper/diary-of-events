@@ -2,10 +2,10 @@ const express = require('express');
 const Workout = require('../models/Workout');
 const router = express.Router();
 const verifyAuth = require('./token');
-const { workoutValidation, workSessionValidation } = require('../utilities/validation');
+const { workoutValidation, workoutSessionValidation } = require('../utilities/validation');
+// const { workoutSessionSanitizer } = require('../utilities/sanitizer');
 
 router.post('/', verifyAuth, async ( req, res ) => {
-    // validate that the body has the required fields
     const { error } = workoutValidation(req.body);
 
     if ( error ) return res.status(400).send({ errors: error.details });
@@ -25,18 +25,17 @@ router.post('/', verifyAuth, async ( req, res ) => {
     }
 });
 
-
 router.get('/', verifyAuth, async ( req, res) => {
-   try {
-       const workouts = await Workout.find({'_account': req.account._id}, ( err, w) => {
+    try {
+        const workouts = await Workout.find({'_account': req.account._id}, ( err, w) => {
             if ( err ) return res.status(400).send({ error: err });
             return w;
-       });
-       res.status(200).send({ workouts : workouts});
+        });
+        res.status(200).send({ workouts : workouts});
 
-   }catch ( err ) {
-       return res.status(400).send({ error: err });
-   }
+    }catch ( err ) {
+        return res.status(400).send({ error: err });
+    }
     
 });
 
@@ -85,7 +84,7 @@ router.patch('/:workoutId', verifyAuth, async ( req, res ) => {
 });
 
 router.post('/:workoutId/sessions', verifyAuth, async ( req, res ) => {
-    const { error } = workSessionValidation( req.body );
+    const { error } = workoutSessionValidation( req.body );
 
     if ( error )  return res.status(400).send({ errors: error.details });
 
@@ -100,7 +99,6 @@ router.post('/:workoutId/sessions', verifyAuth, async ( req, res ) => {
 
 
     } catch ( err ) {
-        console.log('Inside catch');
         res.status(400).send({ error: err });
     }
 });
@@ -113,16 +111,35 @@ router.delete('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) 
         if ( !workout ) return res.status(404).send({ error: 'Not Found!'});
 
         workout.sessions.pull(req.params.sessionId);
-        workout.save();
+        await workout.save();
 
         res.status(200).send({ workout: workout });
 
 
     } catch ( err ) {
-        console.log('Inside catch');
         res.status(400).send({ error: err });
     }
 });
+
+router.patch('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) => {
+    try {
+        const workout = await Workout.findById(req.params.workoutId).where({ '_account': req.account._id });
+        if ( !workout ) return res.status(404).send({ error: 'Not Found!'});
+
+        let sess = workout.sessions.pop(req.params.sessionId);
+        if ( req.body.start ) sess.start = req.body.start;
+        if ( req.body.end ) sess.end = req.body.end;
+
+        workout.sessions.push(sess);
+        await workout.save();
+
+        res.status(200).send({ workout: workout });
+
+    }catch ( err ) {
+        res.status(400).send({ error: err });
+
+    }
+})
 
 
 module.exports = router;

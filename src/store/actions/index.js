@@ -4,5 +4,13 @@ export {
 } from './signin';
 
 export {
-    signup
+    signup,
+    showSignup
 } from './signup';
+
+export {
+    fetchWorkouts,
+    setViewedWorkout,
+    createWorkoutSession,
+    updateWorkoutSession
+} from './workouts'

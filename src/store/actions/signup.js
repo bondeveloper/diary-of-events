@@ -1,23 +1,35 @@
 import axios from "axios";
-import { SIGNUP_SUCCESS } from './actionTypes';
+import Cookie from 'js-cookie';
+
+import { SIGNUP_SUCCESS, SIGNUP_START, SIGNUP_SHOW } from './actionTypes';
 
 export const signupSuccess = data => {
     return {
-        data: data,
-        type: SIGNUP_SUCCESS
+        account: data,
+        type: SIGNUP_SUCCESS,
+        loading: false,
+        hide: true
     };
 };
 
 export const signup = data => {
-    console.log( data );
+
     return dispatch => {
-        axios.post('/api/signup', data)
+
+        axios.post('/api/accounts/signup', data)
         .then( res => {
-            console.log(res.data);
-            dispatch(signupSuccess(res.data));
+            Cookie.set('account', res.data.account);
+            dispatch( signupSuccess(res.data.account) );
         })
         .catch( err => {
             console.log(err);
         });
     };
 };
+
+export const showSignup = currentState => {
+    return {
+        type: SIGNUP_SHOW,
+        hide: !currentState
+    }
+}

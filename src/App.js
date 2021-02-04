@@ -6,17 +6,31 @@ import * as actions from './store/actions/index';
 
 import Layout from './hoc/Layout/Layout';
 import Home from './containers/pages/Home/Home';
+import WorkoutList from './components/pages/Workouts/List/List';
+import WorkoutView from './components/pages/Workouts/View/View';
+import WorkoutSessionCreate from './components/pages/Workouts/View/Sessions/Create/Create'
 
 class App extends Component {
+  componentDidMount () {
+    this.props.onCheckAuth();
+  }
   render () {
-    let routes = (
-      <Switch>
-        <Route path='/' component={Home} />
-        <Route path='/workouts' component="" />
-      </Switch>
-    )
+   let routes = <Switch>
+                  <Route to='/' component={Home} />
+                </Switch>
+
+    if ( this.props.isAuth ) {
+      routes = (
+        <Switch>
+          <Route path='/workouts/:id/sessions/create' component={WorkoutSessionCreate} />
+          <Route path='/workouts/:id' component={WorkoutView} />
+          <Route to='/workouts' exact component={WorkoutList} />
+        </Switch>
+      );
+    }
+    
     return (
-      <Layout>
+      <Layout auth={this.props.isAuth}>
         {routes}
       </Layout>
     );

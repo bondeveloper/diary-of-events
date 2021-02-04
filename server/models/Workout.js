@@ -2,22 +2,30 @@ const mongoose = require('mongoose');
 
 const SessionSchema = mongoose.Schema({
     start : {
-        type: Date,
-        required: true
+        type: Date
     },
     end : {
-        type: Date,
-        required: true
+        type: Date
     },
     weight : {
         type: Number,
         required: true,
         max: 1000
     },
-    weight_measure : {
+    weight_unit : {
         type: String,
         required: true
     },
+    waist : {
+        type: Number,
+        max: 1000
+    },
+    waist_unit : {
+        type: String
+    },
+},
+{
+    timestamps: { createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 
 const WorkoutSchema = mongoose.Schema({
