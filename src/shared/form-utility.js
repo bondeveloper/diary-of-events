@@ -63,17 +63,20 @@ const thickness = {
     lbs: 'cm',
     kg: 'inch'
 }
-const weight = input('number', 'Weight', 'Weight');
-const weightUnit = select( heaviness, 'Select unit' );
-const waist = input('number', 'Waist', 'Waist');
-const waistUnit = select( thickness, 'Select unit' );
+
 
 export const workoutSessionForm = {
-    weight:  weight,
-    weightUnit: weightUnit,
-    waist: waist,
-    waistUnit: waistUnit
+    weight:  input('number', 'Weight', 'Weight'),
+    weightUnit: select( heaviness, 'Select unit' ),
+    waist: input('number', 'Waist', 'Waist'),
+    waistUnit: select( thickness, 'Select unit' ),
 };
+
+export const workoutForm = {
+    name:  input('number', 'Name', 'name'),
+    description: input('textarea', 'Description', 'description'),
+};
+
 
 export const signinForm = {
     email: email,
@@ -91,14 +94,4 @@ export const formInputChanged = ( form, event, key) => {
     return updateObject(form, { [key]: updatedFormElement });
 }
 
-export const formObjInputChanged = ( form, event, key) => {
-    console.log(form);
-    console.log(event);
-    console.log(key);
-    // const updatedFormElement = updateObject(form[key], 
-    //     { 
-    //         value: event.target.value
-    //         unit: 
-    //     });
-}
 

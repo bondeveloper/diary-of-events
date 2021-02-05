@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 import classes from './List.module.css';
 
@@ -15,15 +16,24 @@ class WorkoutList extends Component {
             this.props.onFetchWorkouts( this.props.token );
         }
     }
-    viewHandler = data => {
+
+    viewWorkoutHandler = data => {
         this.props.onSetViewed( data );
 
         this.props.history.push('workouts/'+data._id);
         return <Redirect to={'workouts/'+data._id} />
     }
 
-    createHandler = data => {
-        console.log(data);
+    createWorkoutHandler = () => {
+        this.props.history.push('workouts/create');
+        return <Redirect to={'workouts/create'} />
+    }
+
+    deleteWorkoutHandler = ( pk ) => {
+        this.props.onDeleteWorkout( {
+            id: pk,
+            token: this.props.token
+        });
     }
     
     render () {
@@ -32,7 +42,14 @@ class WorkoutList extends Component {
         return (
             <div className={classes.List}>
                 <Redirect to={this.props.redirect} />
-                <Table data={this.props.workouts} keyValue='_id' excludeFromTable={excludeFromTable} viewClicked={this.viewHandler} />
+                <Button variant='primary' onClick={this.createWorkoutHandler}>&#43; workout</Button>
+                <Table 
+                    data={this.props.workouts} 
+                    keyValue='_id' 
+                    excludeFromTable={excludeFromTable}
+                    viewClicked={this.viewWorkoutHandler} 
+                    deleteClicked={this.deleteWorkoutHandler} 
+                    />
             </div>
         );
     };
@@ -50,7 +67,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps  = dispatch => {
     return {
         onFetchWorkouts: token => dispatch( actions.fetchWorkouts( token ) ),
-        onSetViewed: workout => dispatch( actions.setViewedWorkout( workout ))
+        onSetViewed: workout => dispatch( actions.setViewedWorkout( workout ) ),
+        onDeleteWorkout: data => dispatch( actions.deleteWorkout( data ))
     };
 };
 

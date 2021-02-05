@@ -23,8 +23,12 @@ class WorkoutSessionList extends Component {
             }
         } );
     }
-    deleteSessionHandler = sessionId => {
-        this.props.onDeleteWorkoutSession( id );
+    deleteSessionHandler = ( sessionId ) => {
+        this.props.onDeleteWorkoutSession({
+            sessionId: sessionId,
+            id: this.props.id,
+            token: this.props.token
+        });
     }
 
     render () {
@@ -59,7 +63,7 @@ class WorkoutSessionList extends Component {
                                         <li><Button variant='link' href={ session.publicUrl }>link</Button></li>
                                     </ul>
                                     { startEndBtn }
-                                    <Button variant='danger' onClick={ () => this.deleteSessionHandler( session._id ) }>delete</Button>
+                                    <Button variant='outline-danger' size='sm' onClick={ () => this.deleteSessionHandler( session._id ) }>delete</Button>
                                     
                                 </Card.Body>
                                 </Accordion.Collapse>
@@ -86,7 +90,8 @@ const mapStateToProps = state => {
 };
 const mapDispatchToProps = dispatch => {
     return {
-        onUpdateWorkoutSession: data => dispatch( actions.updateWorkoutSession( data ) )
+        onUpdateWorkoutSession: data => dispatch( actions.updateWorkoutSession( data ) ),
+        onDeleteWorkoutSession: data => dispatch( actions.deleteWorkoutSession( data ) )
     }
 }
 

@@ -8,8 +8,14 @@ import classes from './Table.module.css';
 
 class CustomTable extends Component {
 
-    onClickedHandler = ( data ) => {
-        this.props.viewClicked( data );
+    onClickedHandler = ( data, action ) => {
+        switch ( action ) {
+            case 'view' :
+                this.props.viewClicked( data );
+                break;
+            case 'delete':
+                this.props.deleteClicked( data );
+        }
     }
 
     renderTableData = (data, key, exclude) => {
@@ -27,10 +33,11 @@ class CustomTable extends Component {
                 )
             });
             return (
-                <tr key={ key + valuesCopy[key] }>
+                <tr key={ key + pk }>
                     {tableData}
-                    <td key={'action' + key}>
-                        <Button variant='link' key={pk} onClick={ () => this.onClickedHandler( values ) }>view</Button>
+                    <td key={`action' + ${key}`}>
+                        <Button variant='link'  onClick={ () => this.onClickedHandler( values, 'view' ) }>view</Button>
+                        <Button variant='link'  onClick={ () => this.onClickedHandler( pk, 'delete' ) }>delete</Button>
                     </td>
                 </tr>
             );
@@ -39,22 +46,23 @@ class CustomTable extends Component {
     
     renderTableColumnNames = (data, key, exclude) => {
         return [...data].slice(0,1).map( values => {
+            const pk = values[key];
             let valuesCopy = {...values};
                 
             for ( let x of exclude ) {
                 delete valuesCopy[x];
             }
 
-            const tableColumnNames = Object.keys( valuesCopy ).map( key => {
+            const tableColumnNames = Object.keys( valuesCopy ).map( x => {
     
                 return (
-                    <th key={key}>{ transformUnderscoreCaseToSentenceCase( key ) }</th>
+                    <th key={x}>{ transformUnderscoreCaseToSentenceCase( x ) }</th>
                     )
                 });
             return (
-                <tr key={ key + values[key] }>
+                <tr key={ key + pk }>
                     {tableColumnNames}
-                    <th key={'action' + values[key]}></th>
+                    <th key={'action' + pk}></th>
                 </tr>
             );
         });

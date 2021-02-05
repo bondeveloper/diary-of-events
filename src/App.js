@@ -9,6 +9,7 @@ import Home from './containers/pages/Home/Home';
 import WorkoutList from './components/pages/Workouts/List/List';
 import WorkoutView from './components/pages/Workouts/View/View';
 import WorkoutSessionCreate from './components/pages/Workouts/View/Sessions/Create/Create'
+import WorkoutCreate from './components/pages/Workouts/Create/Create';
 
 class App extends Component {
   componentDidMount () {
@@ -23,6 +24,7 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path='/workouts/:id/sessions/create' component={WorkoutSessionCreate} />
+          <Route path='/workouts/create' component={WorkoutCreate} />
           <Route path='/workouts/:id' component={WorkoutView} />
           <Route to='/workouts' exact component={WorkoutList} />
         </Switch>

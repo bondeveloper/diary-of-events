@@ -1,5 +1,13 @@
 import axios from 'axios';
-import { WORKOUT_FETCH_SUCCESS, WORKOUT_VIEWED_SET, WORKOUT_SESSION_CREATE_SUCCESSFUL } from './actionTypes';
+import { 
+    WORKOUT_FETCH_SUCCESS,
+    WORKOUT_VIEWED_SET,
+    WORKOUT_SESSION_CREATE_SUCCESSFUL,
+    WORKOUT_SESSION_DELETE_SUCCESSFUL,
+    WORKOUT_SESSION_UPDATE_SUCCESSFUL,
+    WORKOUT_CREATE_SUCCESSFUL,
+    WORKOUT_DELETE_SUCCESSFUL
+    } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
     return {
@@ -8,9 +16,16 @@ export const fetchWorkoutsSuccessful = data => {
     }
 }
 
-export const postSuccessful = () => {
+export const postSuccessful = ( type, data = null) => {
     return {
-        type: WORKOUT_SESSION_CREATE_SUCCESSFUL
+        type: type,
+        // view: data
+    }
+}
+
+export const reqSuccessful = type => {
+    return {
+        type: type
     }
 }
 
@@ -52,7 +67,7 @@ export const createWorkoutSession = data => {
         })
         .then( res => {
             console.log( res.data );
-            dispatch( postSuccessful() )
+            dispatch( postSuccessful( WORKOUT_SESSION_CREATE_SUCCESSFUL ) )
         }).catch( err => {
             console.log(err);
         })
@@ -69,7 +84,56 @@ export const updateWorkoutSession = data => {
         })
         .then( res => {
             console.log( res.data );
-            dispatch( postSuccessful() )
+            dispatch( postSuccessful( WORKOUT_SESSION_UPDATE_SUCCESSFUL ) )
+        }).catch( err => {
+            console.log(err);
+        })
+    }
+}
+
+export const deleteWorkoutSession = data => {
+    console.log(data);
+    return dispatch => {
+        axios.delete(`/api/workouts/${data.id}/sessions/${data.sessionId}`, {
+            headers: {
+                'auth-token' : data.token
+            }
+        })
+        .then( res => {
+            console.log( res.data );
+            dispatch( reqSuccessful( WORKOUT_SESSION_DELETE_SUCCESSFUL ) )
+        }).catch( err => {
+            console.log(err);
+        })
+    }
+}
+
+export const createWorkout = data => {
+    return dispatch => {
+        axios.post('/api/workouts', data.data, {
+            headers: {
+                'auth-token' : data.token
+            }
+        })
+        .then( res => {
+            console.log( res.data );
+            dispatch( postSuccessful( WORKOUT_CREATE_SUCCESSFUL, res.data ) )
+        }).catch( err => {
+            console.log(err);
+        })
+    }
+}
+
+export const deleteWorkout = data => {
+    return dispatch => {
+        axios.delete(`/api/workouts/${data.id}`, {
+            headers: {
+                'auth-token' : data.token
+            }
+        })
+        .then( res => {
+            console.log( res.data );
+            dispatch( reqSuccessful( WORKOUT_DELETE_SUCCESSFUL ) )
         }).catch( err => {
             console.log(err);
         })

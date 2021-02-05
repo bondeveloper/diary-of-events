@@ -12,5 +12,8 @@ export {
     fetchWorkouts,
     setViewedWorkout,
     createWorkoutSession,
-    updateWorkoutSession
+    updateWorkoutSession,
+    deleteWorkoutSession,
+    createWorkout,
+    deleteWorkout
 } from './workouts'
