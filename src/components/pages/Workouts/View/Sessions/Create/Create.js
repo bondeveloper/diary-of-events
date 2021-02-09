@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import classes from './Create.module.css';
 import * as actions from '../../../../../../store/actions/index';
@@ -21,7 +24,6 @@ class WorkoutSessionCreate extends Component {
     }
 
     onCreateWorkoutSessionHandler = event => {
-        event.preventDefault();
         this.props.onCreateWorkoutSession({
             data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ), 
             id: this.props.match.params.id,
@@ -90,21 +92,28 @@ class WorkoutSessionCreate extends Component {
         });
 
         return (
-        <div className={classes.Create}>
-            <Form>
-                { form }
-                <Button variant='danger' onClick={this.onCreateWorkoutSessionHandler}>
-                    Submit
-                </Button>
-            </Form>
-        </div>
+        <Container className={classes.Create}>
+            <Redirect to={this.props.redirect} />
+            <Row>
+                <Col sm='12'>
+                    <Form>
+                        { form }
+                        <Button variant='danger' onClick={this.onCreateWorkoutSessionHandler}>
+                            Submit
+                        </Button>
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
         );
     }
 };
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
-        token: state.signin.token
+        token: state.signin.token,
+        redirect: state.workouts.redirect
     }
 }
 

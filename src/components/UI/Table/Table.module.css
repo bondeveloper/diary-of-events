@@ -2,3 +2,23 @@
     max-height: 500px;
     margin: 40px auto;
 }
+
+.ViewBtnIcon {
+    color: rgba(255, 165, 0);
+}
+
+.DeleteBtnIcon {
+    color: rgba( 255, 0, 0);
+}
+
+.Actions svg {
+    cursor: pointer;
+}
+
+
+@media (min-width: 500px ) {
+    .Actions svg {
+        margin: 8px;
+    }
+    
+}

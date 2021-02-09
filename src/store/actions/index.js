@@ -15,5 +15,9 @@ export {
     updateWorkoutSession,
     deleteWorkoutSession,
     createWorkout,
-    deleteWorkout
+    deleteWorkout,
+
+    renderCreateWorkout,
+    renderViewWorkout,
+    renderCreateWorkoutSession
 } from './workouts'

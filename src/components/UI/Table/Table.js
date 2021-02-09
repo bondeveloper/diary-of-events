@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
+import Toast from 'react-bootstrap/Toast';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { transformUnderscoreCaseToSentenceCase, excludeKeyFromObj } from '../../../shared/utility';
 
@@ -35,9 +37,9 @@ class CustomTable extends Component {
             return (
                 <tr key={ key + pk }>
                     {tableData}
-                    <td key={`action' + ${key}`}>
-                        <Button variant='link'  onClick={ () => this.onClickedHandler( values, 'view' ) }>view</Button>
-                        <Button variant='link'  onClick={ () => this.onClickedHandler( pk, 'delete' ) }>delete</Button>
+                    <td key={`action' + ${key}`} className={classes.Actions}>
+                        <FontAwesomeIcon icon='eye' size='sm' className={classes.ViewBtnIcon} onClick={ () => this.onClickedHandler( values, 'view' ) } />
+                        <FontAwesomeIcon icon='trash-alt' size='sm' className={classes.DeleteBtnIcon} onClick={ () => this.onClickedHandler( pk, 'delete' ) }/>
                     </td>
                 </tr>
             );
@@ -79,7 +81,15 @@ class CustomTable extends Component {
                     {this.renderTableData(this.props.data, this.props.keyValue, this.props.excludeFromTable)}
                 </tbody>
             </Table>
-        ) : <span>Nothing to display!</span>
+        ) : (
+            <Toast>
+                <Toast.Header>
+                <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
+                <strong className="mr-auto">Oops!</strong>
+                </Toast.Header>
+                <Toast.Body>You currently don't have any workouts</Toast.Body>
+            </Toast>
+            )
 
         return (
             <div className={classes.Table}>

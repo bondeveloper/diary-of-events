@@ -1,12 +1,11 @@
 import axios from 'axios';
+import { useAsync } from 'react-async';
+
 import { 
     WORKOUT_FETCH_SUCCESS,
     WORKOUT_VIEWED_SET,
-    WORKOUT_SESSION_CREATE_SUCCESSFUL,
-    WORKOUT_SESSION_DELETE_SUCCESSFUL,
     WORKOUT_SESSION_UPDATE_SUCCESSFUL,
-    WORKOUT_CREATE_SUCCESSFUL,
-    WORKOUT_DELETE_SUCCESSFUL
+    RENDER_COMPONENT
     } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
@@ -16,28 +15,62 @@ export const fetchWorkoutsSuccessful = data => {
     }
 }
 
-export const postSuccessful = ( type, data = null) => {
+const onRequestSuccess = ( component, data = null, isList = false, type = RENDER_COMPONENT ) => {
+    let redirect = '';
+    let view, list = null;
+    switch ( component ) {
+        case 'workout':
+            redirect = `/workouts/${data._id}`;
+            break;
+        case 'workouts':
+            redirect = '/workouts';
+            break;
+    }
+
+    if ( isList ) list = data; else view = data;
+
     return {
         type: type,
-        // view: data
+        redirect: redirect,
+        view: view,
+        loading: false,
+        list: list
     }
 }
 
-export const reqSuccessful = type => {
+const onRequestStarted = () => {
     return {
-        type: type
+        type: RENDER_COMPONENT,
+        loading: true,
+        redirect: '/workouts'
+    }
+}
+
+
+const render = data => {
+    const { redirect, view } = {...data};
+    return dispatch => {
+        dispatch({
+            type: RENDER_COMPONENT,
+            redirect: redirect,
+            view: view,
+            
+        })
     }
 }
 
 export const fetchWorkouts = token => {
     return dispatch => {
+
+        dispatch( onRequestStarted() );
+
         axios.get('/api/workouts/', {
             headers: {
                 'auth-token' : token
             }
         })
         .then( res => {
-            dispatch( fetchWorkoutsSuccessful( res.data.workouts ));
+            dispatch( onRequestSuccess( 'workouts', res.data.workouts, true));
         })
         .catch( err => {
 
@@ -66,8 +99,7 @@ export const createWorkoutSession = data => {
             }
         })
         .then( res => {
-            console.log( res.data );
-            dispatch( postSuccessful( WORKOUT_SESSION_CREATE_SUCCESSFUL ) )
+            dispatch( onRequestSuccess( 'workout', res.data.workout ) )
         }).catch( err => {
             console.log(err);
         })
@@ -84,7 +116,7 @@ export const updateWorkoutSession = data => {
         })
         .then( res => {
             console.log( res.data );
-            dispatch( postSuccessful( WORKOUT_SESSION_UPDATE_SUCCESSFUL ) )
+            dispatch( onRequestSuccess( WORKOUT_SESSION_UPDATE_SUCCESSFUL ) )
         }).catch( err => {
             console.log(err);
         })
@@ -92,7 +124,6 @@ export const updateWorkoutSession = data => {
 }
 
 export const deleteWorkoutSession = data => {
-    console.log(data);
     return dispatch => {
         axios.delete(`/api/workouts/${data.id}/sessions/${data.sessionId}`, {
             headers: {
@@ -100,8 +131,7 @@ export const deleteWorkoutSession = data => {
             }
         })
         .then( res => {
-            console.log( res.data );
-            dispatch( reqSuccessful( WORKOUT_SESSION_DELETE_SUCCESSFUL ) )
+            dispatch( onRequestSuccess( 'workouts', res.data ) )
         }).catch( err => {
             console.log(err);
         })
@@ -116,8 +146,7 @@ export const createWorkout = data => {
             }
         })
         .then( res => {
-            console.log( res.data );
-            dispatch( postSuccessful( WORKOUT_CREATE_SUCCESSFUL, res.data ) )
+            dispatch( onRequestSuccess( 'workout', res.data.workout ) )
         }).catch( err => {
             console.log(err);
         })
@@ -133,9 +162,23 @@ export const deleteWorkout = data => {
         })
         .then( res => {
             console.log( res.data );
-            dispatch( reqSuccessful( WORKOUT_DELETE_SUCCESSFUL ) )
+            dispatch( onRequestSuccess( 'workouts', res.data ) )
         }).catch( err => {
             console.log(err);
         })
     }
+}
+
+export const renderCreateWorkout = () => {
+    return render( { redirect: '/workouts/create' } );
+}
+export const renderViewWorkout = data => {
+    return render( {
+        redirect: `/workouts/${ data._id }`,
+        view: data
+    } );
+}
+
+export const renderCreateWorkoutSession = ( pk ) => {
+    return render( { redirect: `/workouts/${pk}/sessions/create` } );    
 }

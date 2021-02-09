@@ -43,7 +43,6 @@ class WorkoutSessionList extends Component {
             }else {
                 displayTimes = 'Session not started';
                 startEndBtn = <Button variant='outline-primary' size='sm' onClick={ () => this.updateTimesHandler( session._id, 'start' ) }>start</Button>
-                console.log(1);
             }
             const startBtn = !session.start ? <Button variant='outline-primary' size='sm'>start</Button> : null;
             const endBtn = !session.end ? <Button variant='outline-danger' size='sm'>end</Button> : null;
@@ -76,7 +75,6 @@ class WorkoutSessionList extends Component {
         return (
             <Row>
                 <div className={classes.Sessions}>
-                    <h5 className={classes.SessionTitle}>Sessions</h5>
                     { sessionData }
                 </div>
             </Row>

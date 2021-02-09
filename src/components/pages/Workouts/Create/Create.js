@@ -3,10 +3,12 @@ import React, { Component } from 'react';
 import { workoutForm, formInputChanged } from '../../../../shared/form-utility';
 import { formObjectToArray, tranformPascalCaseToUnderscoreCase, mapKeyToValue } from '../../../../shared/utility';
 import Aux from '../../../../hoc/Aux/Aux';
+import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import classes from './Create.module.css';
 import * as actions from '../../../../store/actions/index';
@@ -89,21 +91,24 @@ class CreateWorkout extends Component {
     });
 
     return (
-    <div className={classes.Create}>
+    <Container className={classes.Create}>
         <Form>
+            <Redirect to={this.props.redirect} />
             { form }
             <Button variant='danger' onClick={this.onCreateWorkout}>
                 Submit
             </Button>
         </Form>
-    </div>
+    </Container>
     );
    }
 }
 
 const mapStateToProps = state => {
     return {
-        token: state.signin.token
+        token: state.signin.token,
+        view: state.workouts.view,
+        redirect: state.workouts.redirect
     }
 }
 
