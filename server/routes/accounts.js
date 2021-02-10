@@ -41,11 +41,11 @@ router.post('/signin', async ( req, res ) => {
     if ( error ) return res.status(400).send({ errors: error.details });
 
     const account = await Account.findOne({ email: req.body.email });
-    if ( !account ) return res.status(400).send("Invalid Email or password!");
+    if ( !account ) return res.status(400).send({ errors: [{message: 'Invalid email or password!' }] });
 
     const validPass = await bcrypt.compare(req.body.password, account.password);
 
-    if ( !validPass ) return res.status(400).send("Invalid email or Password!");
+    if ( !validPass ) return res.status(400).send({ errors: [{message: 'Invalid email or password!' }] });
 
     const token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).send({ token : token });

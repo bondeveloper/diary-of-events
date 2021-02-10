@@ -9,6 +9,9 @@ import { transformUnderscoreCaseToSentenceCase, excludeKeyFromObj } from '../../
 import classes from './Table.module.css';
 
 class CustomTable extends Component {
+    state = {
+        show: true
+    };
 
     onClickedHandler = ( data, action ) => {
         switch ( action ) {
@@ -70,6 +73,8 @@ class CustomTable extends Component {
         });
     }
 
+    toggleShow = () => this.setState({ show: !this.state.show});
+
     render () {
              
         const table = this.props.data && this.props.data.length > 0 ? (
@@ -82,9 +87,8 @@ class CustomTable extends Component {
                 </tbody>
             </Table>
         ) : (
-            <Toast>
+            <Toast show={this.state.show} onClose={this.toggleShow}>
                 <Toast.Header>
-                <img src="holder.js/20x20?text=%20" className="rounded mr-2" alt="" />
                 <strong className="mr-auto">Oops!</strong>
                 </Toast.Header>
                 <Toast.Body>You currently don't have any workouts</Toast.Body>

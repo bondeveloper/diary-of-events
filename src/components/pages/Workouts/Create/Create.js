@@ -15,7 +15,8 @@ import * as actions from '../../../../store/actions/index';
 
 class CreateWorkout extends Component {
     state = {
-        form: workoutForm
+        form: workoutForm,
+        validated: false
     }
 
     inputChangedHandler = ( event, key ) => {
@@ -23,6 +24,10 @@ class CreateWorkout extends Component {
     }
 
     onCreateWorkout = () => {
+        const form = event.currentTarget;
+        const jes = tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) )
+        console.log(jes);
+        console.log(eve)
         this.props.onCreateWorkout({
             data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ),
             token: this.props.token 

@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 import classes from './Signin.module.css';
 
@@ -33,6 +35,13 @@ class Signin extends Component {
     }
 
     render () {
+        const errors = this.props.errors && this.props.errors.length > 0 ? (
+            <Alert variant='danger'>
+                {
+                    this.props.errors.map( ( err, key ) => <span key={ key }>{ err.message } <br/></span>)
+                }
+            </Alert>
+        ): null;
         let form = formObjectToArray( this.state.form ).map( ele => {
             return (
                 <Form.Group controlId={ele.key} key={ele.key}>
@@ -50,6 +59,7 @@ class Signin extends Component {
 
         return (
             <div className={classes.Signin}>
+                {errors}
                 <Form className={classes.Form}>          
                     {redirect}
                     {form}
@@ -66,7 +76,8 @@ class Signin extends Component {
 const mapStateToProps = state => {
     return {
         isAuth: state.signin.token !== null,
-        redirect: state.signin.redirect
+        redirect: state.signin.redirect,
+        errors: state.signin.errors
     };
 };
 
