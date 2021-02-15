@@ -4,7 +4,8 @@ const email = {
     type: 'input',
         config: {
             type: 'email',
-            placeholder: 'email'
+            placeholder: 'email',
+            required: true,
         },
         value: '',
         label: 'Email'
@@ -14,7 +15,8 @@ const  password = {
     type: 'input',
     config: {
         type: 'password',
-        placeholder: 'password'
+        placeholder: 'password',
+        required: true,
     },
     value: '',
     label: 'Password'
@@ -24,7 +26,8 @@ const repeat_password = {
     type: 'input',
     config: {
         type: 'password',
-        placeholder: 'confirm password'
+        placeholder: 'confirm password',
+        required: true,
     },
     value: '',
     label: 'Confirm Password'

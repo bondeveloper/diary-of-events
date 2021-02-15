@@ -1,37 +1,63 @@
-import { SIGNIN_SUCCESS, SIGNOUT_SUCCESS, REQUEST_FAILED } from '../actions/actionTypes';
+import { REQUEST_SIGNIN_SUCCESS, REQUEST_SIGNOUT_SUCCESS, REQUEST_SIGNIN_FAILED, REQUEST_SIGNIN_STARTED, RENDER_SIGNIN_COMPONENT } from '../actions/actionTypes';
 import { updateObject } from '../../shared/utility';
 
 const initialState = {
     token: null,
     redirect: '/',
-    errors: []
+    errors: [],
+    loading: false,
+    signedout: true
 }
 
-const signinSuccess = ( state, action ) => {
-    return updateObject ( state, { 
+const requestSuccess = ( state, action ) => {
+    return updateObject ( state, {
         token: action.token,
-        redirect: action.redirect
+        redirect: action.redirect,
+        loading: action.loading,
+        errors: action.errors
     });
 }
+
+const requestStarted = ( state, action ) => {
+    return updateObject( state, {
+        loading: action.loading,
+        errors: action.errors,
+    });
+};
+
 const signoutSuccess = ( state, action ) => {
     return updateObject( state, {
         token: null,
-        redirect: action.redirect
+        redirect: action.redirect,
+        errors: action.errors,
     });
 }
 const requestFailed = ( state, action ) => {
     return updateObject( state, {
-        errors: action.errors
+        errors: action.errors,
+        loading: action.loading,
     })
 }
+
+const renderComponent = ( state, action ) => {
+    return updateObject( state, {
+        hide: action.hide,
+        errors: action.errors,
+     });
+}
+
 const reducer = ( state = initialState, action ) => {
     switch ( action.type ) {
-        case SIGNIN_SUCCESS:
-            return signinSuccess( state, action );
-        case SIGNOUT_SUCCESS:
-            return signoutSuccess( state, action);
-        case REQUEST_FAILED:
+        case REQUEST_SIGNIN_SUCCESS:
+            return requestSuccess( state, action );
+        case REQUEST_SIGNOUT_SUCCESS:
+            return requestSuccess( state, action);
+        case REQUEST_SIGNIN_FAILED:
             return requestFailed( state, action );
+        case REQUEST_SIGNIN_STARTED:
+            return requestStarted( state, action );
+        case RENDER_SIGNIN_COMPONENT:
+            return renderComponent( state, action ) ;
         default:
             return state;
     }

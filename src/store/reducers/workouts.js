@@ -3,7 +3,7 @@ import {
     WORKOUT_FETCH_SUCCESS, 
     WORKOUT_VIEWED_SET,
     WORKOUT_CREATE_SUCCESSFUL,
-    RENDER_COMPONENT
+    RENDER_WORKOUT_COMPONENT
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -49,7 +49,7 @@ const reducer = ( state = initialState, action ) => {
             return setViewed( state, action );
         case WORKOUT_CREATE_SUCCESSFUL:
             return renderComponent ( state, action );
-        case RENDER_COMPONENT:
+        case RENDER_WORKOUT_COMPONENT:
             return renderComponent(state, action );
         default:
             return state;

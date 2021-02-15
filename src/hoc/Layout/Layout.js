@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import Aux from '../Aux/Aux';
 import { connect } from 'react-redux';
 
-import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
-import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
+// import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 import Navbar from '../../components/Navigation/Navbar/Navbar';
 
 class Layout extends Component {
@@ -25,7 +24,7 @@ class Layout extends Component {
         return (
             <Aux>
                 <Navbar drawerToggled={this.drawerToggledHandler} auth={this.props.auth} />
-                <SideDrawer open={this.state.showDrawer} closed={this.drawerClosedHandler} auth={this.props.auth}/>
+                {/* <SideDrawer open={this.state.showDrawer} closed={this.drawerClosedHandler} auth={this.props.auth}/> */}
                 <main>
                     {this.props.children}
                 </main>

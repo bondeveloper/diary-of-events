@@ -1,37 +1,42 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
-import ListGroup from 'react-bootstrap/ListGroup';
+import { Form, Alert, Button, Spinner, Col, InputGroup } from 'react-bootstrap';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import classes from './Signin.module.css';
 
-import { signinForm, formInputChanged} from '../../../shared/form-utility';
+import { formInputChanged} from '../../../shared/form-utility';
 import { formObjectToArray, mapKeyToValue } from '../../../shared/utility';
+import Aux from '../../../hoc/Aux/Aux';
 
 import * as actions from '../../../store/actions/index';
 
 class Signin extends Component {
     state = {
-        form: signinForm
+        validated: false
     }
 
     componentDidMount () {
-        // this.props.isAuth ? this.props.history.push(this.props.redirect) : null;
+        this.props.onCheckAuth();
+        console.log(this.props.isAuth);
         if ( this.props.isAuth ) {
             this.props.history.push(this.props.redirect);
+            return  <Redirect to={ this.props.redirect} />;
         }
+        this.props.onSigninShow();
     }
 
     inputChangedHandler = ( event, key ) => {
         this.setState({ form: formInputChanged( this.state.form, event, key) });
     }
 
-    onSigninHandler = ( event ) => {
-        event.preventDefault();
-        this.props.onSignin( mapKeyToValue( this.state.form ));
+    onSigninHandler = form => {
+        this.setState({ validated: true });
+        this.props.onSignin( form );
+        this.props.history.push( this.props.redirect );
+        return <Redirect to={ this.props.redirect} />;
     }
 
     render () {
@@ -42,48 +47,99 @@ class Signin extends Component {
                 }
             </Alert>
         ): null;
-        let form = formObjectToArray( this.state.form ).map( ele => {
-            return (
-                <Form.Group controlId={ele.key} key={ele.key}>
-                    <Form.Label>{ ele.settings.label }</Form.Label>
-                    <Form.Control
-                        type={ ele.settings.config.type } 
-                        placeholder={ ele.settings.config.placeholder} 
-                        onChange={ event => this.inputChangedHandler( event, ele.key)}/>
-                </Form.Group>
-            );
-
-        });
 
         let redirect = this.props.isAuth ? <Redirect to={this.props.redirect} /> : null;
 
+        const signinBtnChild = this.props.loading ? (
+            <Aux>
+                <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                />
+                Loading...
+            </Aux>
+        ): 'Signup';
+
+        const schema = yup.object({
+            email: yup.string().required().email(),
+            password: yup.string().required(),
+        });
+
         return (
-            <div className={classes.Signin}>
-                {errors}
-                <Form className={classes.Form}>          
-                    {redirect}
-                    {form}
-                    <div className={classes.Buttons}>
-                        <Button variant='danger' onClick={this.onSigninHandler}>Signin</Button>
-                        <Button variant='secondary'>Cancel</Button>
-                    </div>
-                </Form>
+        <Formik
+            validationSchema={schema}
+            onSubmit={this.onSigninHandler}
+            initialValues={{
+                email: '',
+                password: ''
+            }}
+        >
+        {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            isValid,
+            errors,
+        }) => (
+        <Form noValidate onSubmit={handleSubmit}>
+            <Form.Group as={Col} controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Email"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+                isInvalid={!!errors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group as={Col} controlId="password">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    isInvalid={!!errors.password}
+                />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.password}
+                  </Form.Control.Feedback>
+            </Form.Group>
+            <div className={classes.Buttons}>
+                <Button variant='danger' type="submit">{ signinBtnChild }</Button>
+                {/* <Button variant='secondary' disabled={this.props.loading}>Cancel</Button> */}
             </div>
-        );
+        </Form>
+      )}
+    </Formik>);
     };
 };
 
 const mapStateToProps = state => {
+    console.log( state );
     return {
         isAuth: state.signin.token !== null,
         redirect: state.signin.redirect,
-        errors: state.signin.errors
+        errors: state.signin.errors,
+        loading: state.signin.loading
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onSignin : data => dispatch( actions.signin ( data ) )
+        onSignin : data => dispatch( actions.signin ( data ) ),
+        onSigninShow: () => dispatch( actions.showSignin() ),
+        onCheckAuth: () => dispatch( actions.checkSignedIn() )
     };
 };
 

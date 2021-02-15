@@ -17,12 +17,12 @@ import Table from '../../../UI/Table/Table';
 
 class WorkoutList extends Component {
 
-    componentDidMount () {
-        if ( this.props.isAuth ) {
-            this.props.history.push(this.props.redirect)
-            this.props.onFetchWorkouts( this.props.token );
-        }
-    }
+    // componentDidMount () {
+    //     if ( this.props.isAuth ) {
+    //         this.props.history.push(this.props.redirect)
+    //         this.props.onFetchWorkouts( this.props.token );
+    //     }
+    // }
 
 
     viewWorkoutHandler = data => {
@@ -43,7 +43,7 @@ class WorkoutList extends Component {
 
         this.props.onFetchWorkouts( this.props.token );
     }
-    
+
     render () {
         const excludeFromTable = ['sessions', '__v', '_account', '_id'];
 
@@ -54,12 +54,12 @@ class WorkoutList extends Component {
                             `;
 
         const tableContent = this.props.loading && true ? <RingLoader color='blue' loading='true' css={override} size={30} /> : (
-            <Table 
-                data={this.props.workouts} 
-                keyValue='_id' 
+            <Table
+                data={this.props.workouts}
+                keyValue='_id'
                 excludeFromTable={excludeFromTable}
-                viewClicked={this.viewWorkoutHandler} 
-                deleteClicked={this.deleteWorkoutHandler} 
+                viewClicked={this.viewWorkoutHandler}
+                deleteClicked={this.deleteWorkoutHandler}
             />
         )
 
@@ -68,7 +68,7 @@ class WorkoutList extends Component {
                 <Redirect to={ this.props.redirect } />
                 <Row>
                     <Col xs={12}>
-                        <FontAwesomeIcon 
+                        <FontAwesomeIcon
                             data-toggle="tooltip" data-placement="left" title="Create Workout"
                             icon='plus-circle'
                             onClick={this.createWorkoutHandler} className={classes.CreateBtn}/>

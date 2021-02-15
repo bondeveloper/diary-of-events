@@ -14,7 +14,7 @@ router.post('/signup', async ( req, res ) => {
     if (error) return res.status(400).send({ errors: error.details });
 
     const exists = await Account.findOne({ email: req.body.email });
-    if ( exists ) return res.status(400).send("Account with the same email already exists!");
+    if ( exists ) return res.status(400).send({ errors: [{message: 'Account with the same email already exists!' }] });
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(req.body.password, salt);
@@ -28,7 +28,7 @@ router.post('/signup', async ( req, res ) => {
         const saved = await account.save();
         res.status(201).send({ account: saved._id});
     } catch( err ) {
-        res.status.apply(400).send({ error: err });
+        res.status.apply(400).send({ errors: err });
     }
 
 });
@@ -50,31 +50,5 @@ router.post('/signin', async ( req, res ) => {
     const token = jwt.sign({ _id: account._id }, process.env.TOKEN_SECRET);
     res.header('auth-token', token).send({ token : token });
 });
-
-// Update user details
-// router.put('/:id', ( req, res ) => {
-
-//     const account = accounts.find( c => c.id === parseInt(req.params.id) );
-//     if (!account) res.status(404).send('Account not found!');
-
-//     const { error } = validateAccount(req.body);
-
-//     if (error) {
-//         res.status(400).send(error.details);
-//         return;
-//     }
-
-//     account.email = req.body.email;
-//     account.password = req.body.password;
-
-//     accounts.find( c => {
-//         if (c.id === parseInt(req.params.id)) {
-//             c = account
-//         }
-//     } );
-//     res.send(account);
-// });
-
-
 
 module.exports = router;

@@ -5,7 +5,7 @@ import {
     WORKOUT_FETCH_SUCCESS,
     WORKOUT_VIEWED_SET,
     WORKOUT_SESSION_UPDATE_SUCCESSFUL,
-    RENDER_COMPONENT
+    RENDER_WORKOUT_COMPONENT
     } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
@@ -15,7 +15,7 @@ export const fetchWorkoutsSuccessful = data => {
     }
 }
 
-const onRequestSuccess = ( component, data = null, isList = false, type = RENDER_COMPONENT ) => {
+const onRequestSuccess = ( component, data = null, isList = false, type = RENDER_WORKOUT_COMPONENT ) => {
     let redirect = '';
     let view, list = null;
     switch ( component ) {
@@ -40,7 +40,7 @@ const onRequestSuccess = ( component, data = null, isList = false, type = RENDER
 
 const onRequestStarted = () => {
     return {
-        type: RENDER_COMPONENT,
+        type: RENDER_WORKOUT_COMPONENT,
         loading: true,
         redirect: '/workouts'
     }
@@ -51,7 +51,7 @@ const render = data => {
     const { redirect, view } = {...data};
     return dispatch => {
         dispatch({
-            type: RENDER_COMPONENT,
+            type: RENDER_WORKOUT_COMPONENT,
             redirect: redirect,
             view: view,
             

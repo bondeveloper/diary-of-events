@@ -10,7 +10,7 @@ const signupValidation = data =>  {
         email: Joi.string()
                 .email()
                 .required()            
-    });
+    }).options({ allowUnknown: true });
 
     return schema.validate( data );
 };

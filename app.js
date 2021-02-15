@@ -16,6 +16,7 @@ app.use('/api/workouts', require('./server/routes/workouts'));
 
 const port = process.env.API_PORT || 8080;
 
+app.listen(port, () => console.log(`Listening on Port ${port}`));
 // Connect to Db
 mongoose.connect(
     process.env.DB_CONN.replace('<password>', urlencode(process.env.DB_PASS)), 
@@ -24,4 +25,3 @@ mongoose.connect(
     );
 
 
-app.listen(port, () => console.log(`Listening on Port ${port}`));

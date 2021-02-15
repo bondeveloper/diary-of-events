@@ -10,7 +10,15 @@ import classes from './Home.module.css';
 
 
 class Home extends Component {
-    
+
+    componentDidMount () {
+        this.props.onCheckAuth();
+        if ( this.props.isAuth ) {
+            this.props.history.push(this.props.redirect);
+            return  <Redirect to={ this.props.redirect} />;
+        }
+    }
+
     showSigninHandler = ( event ) => {
         event.preventDefault();
         this.props.onShowSignin( this.props.hideSignup );
@@ -23,7 +31,7 @@ class Home extends Component {
                 <Redirect to={this.props.redirect} />
                 <div className={classes.Auth}>
                     { auth }
-                    <div className={classes.ShowSignin}>                
+                    <div className={classes.ShowSignin}>
                         <a href="" onClick={this.showSigninHandler}>{ text }</a>
                     </div>
                 </div>
@@ -34,6 +42,7 @@ class Home extends Component {
 };
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
         hideSignup: state.signup.hide,
         isAuth: state.signin.token !== null,
@@ -43,7 +52,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onShowSignin: currentState => dispatch( actions.showSignup( currentState ) )
+        onShowSignin: currentState => dispatch( actions.showSignup( currentState ) ),
+        onCheckAuth: () => dispatch( actions.checkSignedIn() ),
     }
 }
 
