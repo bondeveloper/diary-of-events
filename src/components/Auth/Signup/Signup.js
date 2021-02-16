@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Button from 'react-bootstrap/Button';
+import { Button, Col} from 'react-bootstrap';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import * as actions from '../../../store/actions/index';
 import { formObjectToArray, mapKeyToValue } from '../../../shared/utility';
@@ -13,18 +15,15 @@ import Aux from '../../../hoc/Aux/Aux';
 
 class Signup extends Component {
     state = {
-        form: signupForm
+        validated: false
     }
 
-    inputChangedHandler = (event, key) => {
-        this.setState({ form: formInputChanged( this.state.form, event, key) });
-    }
+    onSignupHandler =  form => {
+        this.setState({ validated: true });
+        this.props.onSignup( form );
 
-    onSignupHandler = async () => {
-        await this.props.onSignup( mapKeyToValue( this.state.form ) );
-        if ( this.props.errors && this.props.errors.length < 1 && this.props.redirect ) {
-            <Redirect to={this.props.redirect} />
-        };
+        this.props.history.push( this.props.redirect );
+        return <Redirect to={ this.props.redirect} />;
     }
 
     onCancelSignupHandler = () => {
@@ -43,19 +42,6 @@ class Signup extends Component {
             </Alert>
         ): null;
 
-        let form = formObjectToArray( this.state.form ).map( ele => {
-            return (
-                <Form.Group controlId={ ele.key } key={ ele.key }>
-                    <Form.Label> { ele.settings.label }</Form.Label>
-                    <Form.Control 
-                        type={ ele.settings.config.type } 
-                        placeholder={ ele.settings.config.placeholder }
-                        onChange={ event => this.inputChangedHandler( event, ele.key)}/>
-                </Form.Group>
-            )
-
-        });
-
         const signupBtnChild = this.props.loading ? (
             <Aux>
                 <Spinner
@@ -69,18 +55,81 @@ class Signup extends Component {
             </Aux>
         ): 'Signup';
 
+        const schema = yup.object({
+            email: yup.string().required().email(),
+            password: yup.string().required(),
+            repeat_password: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match!'),
+        });
+
         return (
-            <div className={classes.Signup}>
-                { errors }
-                <Form>
-                    {form}
-                    <div className={classes.Buttons}>
-                        <Button variant='danger' onClick={this.onSignupHandler}>{ signupBtnChild }</Button>
-                        <Button variant='secondary' disabled={this.props.loading} onClick={this.onCancelSignupHandler}>Cancel</Button>
-                    </div>
-                </Form>
-            </div>
-        );
+            <Formik
+                validationSchema={schema}
+                onSubmit={this.onSignupHandler}
+                initialValues={{
+                    email: '',
+                    password: '',
+                    repeat_password: ''
+                }}
+            >
+            {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                isValid,
+                errors,
+            }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+                <Form.Group as={Col} controlId="email">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    isInvalid={!!errors.email}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col} controlId="password">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        name="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        isInvalid={!!errors.password}
+                    />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password}
+                      </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col} controlId="repeat_password">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                        type="password"
+                        placeholder="confirm password"
+                        name="repeat_password"
+                        value={values.repeat_password}
+                        onChange={handleChange}
+                        isInvalid={!!errors.repeat_password}
+                    />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.repeat_password}
+                      </Form.Control.Feedback>
+                </Form.Group>
+                <div className={classes.Buttons}>
+                    <Button variant='danger' type="submit">{ signupBtnChild }</Button>
+                    <Button variant='secondary' disabled={this.props.loading} onClick={this.onCancelSignupHandler}>Cancel</Button>
+                </div>
+            </Form>
+          )}
+        </Formik>);
     }
 };
 
@@ -90,7 +139,8 @@ const mapStateToProps = state => {
         isAuth: state.signin.token !== null,
         errors: state.signup.errors,
         redirect: state.signup.redirect,
-        loading: state.signup.loading
+        loading: state.signup.loading,
+        toast: state.signup.toast
     };
 };
 

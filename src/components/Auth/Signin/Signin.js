@@ -7,8 +7,6 @@ import * as yup from 'yup';
 
 import classes from './Signin.module.css';
 
-import { formInputChanged} from '../../../shared/form-utility';
-import { formObjectToArray, mapKeyToValue } from '../../../shared/utility';
 import Aux from '../../../hoc/Aux/Aux';
 
 import * as actions from '../../../store/actions/index';
@@ -22,16 +20,10 @@ class Signin extends Component {
         this.props.onSigninShow();
     }
 
-
-    inputChangedHandler = ( event, key ) => {
-        this.setState({ form: formInputChanged( this.state.form, event, key) });
-    }
-
     onSigninHandler = form => {
         this.setState({ validated: true });
         this.props.onSignin( form );
 
-        console.log( this.props.redirect );
         this.props.history.push( this.props.redirect );
         return <Redirect to={ this.props.redirect} />;
     }
@@ -45,8 +37,6 @@ class Signin extends Component {
             </Alert>
         ): null;
 
-        // let redirect = this.props.isAuth ? <Redirect to='/workouts' /> : null;
-
         const signinBtnChild = this.props.loading ? (
             <Aux>
                 <Spinner
@@ -58,7 +48,7 @@ class Signin extends Component {
                 />
                 Loading...
             </Aux>
-        ): 'Signup';
+        ): 'Signin';
 
         const schema = yup.object({
             email: yup.string().required().email(),
