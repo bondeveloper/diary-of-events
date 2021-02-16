@@ -2,3 +2,14 @@
     margin: 0 auto;
     padding-top: 72px;
 }
+
+.Buttons {
+    text-align: center;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+.Buttons button {
+    display: inline;
+    margin-right: 20px;
+}

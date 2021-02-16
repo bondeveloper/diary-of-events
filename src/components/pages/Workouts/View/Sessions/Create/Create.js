@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
+import { Container, Row, Col, Form, Spinner, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import classes from './Create.module.css';
 import * as actions from '../../../../../../store/actions/index';
@@ -16,96 +14,136 @@ import Aux from '../../../../../../hoc/Aux/Aux';
 
 class WorkoutSessionCreate extends Component {
     state = {
-        form: workoutSessionForm
+        validated: false
     }
 
     inputChangedHandler = ( event, key ) => {
         this.setState({ form: formInputChanged( this.state.form, event, key ) });
     }
 
-    onCreateWorkoutSessionHandler = event => {
+    onCreateWorkoutSessionHandler = form => {
+        this.setState({ validated: true });
         this.props.onCreateWorkoutSession({
-            data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ),
+            data: form,
             id: this.props.match.params.id,
             token: this.props.token
         });
     }
 
     render () {
-        let form = formObjectToArray( this.state.form ).map( ele => {
-            let formElements = null;
 
-            switch ( ele.settings.type ) {
-                case 'input' :
-                    formElements = (
-                        <Aux>
-                            <Col xs="auto" className="my-1">
-                                <Form.Label> { ele.settings.label } </Form.Label>
-                            </Col>
-                            <Col sm={6} className="my-1">
-                                <Form.Label htmlFor={ele.key} srOnly>
-                                { ele.settings.label }
-                                </Form.Label>
-                                <Form.Control
-                                    type={ ele.settings.type }
-                                    id={ele.key}
-                                    placeholder={ ele.settings.config.placeholder }
-                                    onChange={ event => this.inputChangedHandler( event, ele.key ) }/>
-                            </Col>
-                        </Aux>
-                    );
-                    break;
-                case 'select' :
-                    const optionsData = ele.settings.config.options;
-                    const options = Object.keys( optionsData ).map( key => {
-                        return (
-                            <option value={ key } key={key}> { optionsData[key] }</option>
-                        )
-                    });
-                    formElements = (
-                        <Aux>
-                            <Col sm={4} className="my-1">
-                                <Form.Label htmlFor={ele.key} srOnly>
-                                    unit
-                                </Form.Label>
-                                <Form.Control
-                                    as="select"
-                                    defaultValue="Choose..."
-                                    id={ ele.key }
-                                    onChange={ event => this.inputChangedHandler( event, ele.key )} >
-                                    <option> { ele.settings.config.placeholder }...</option>
-                                    { options }
-                                </Form.Control>
-                            </Col>
-                        </Aux>
-                    );
-                    break;
-                default:
-                    console.log( ele.settings.type );
-            }
+        const btnChild = this.props.loading ? (
+           <Aux>
+               <Spinner
+               as="span"
+               animation="grow"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+               />
+               Loading...
+           </Aux>
+        ): 'submit';
 
-            return (
-                <Form.Row className="align-items-center" key={ ele.key }>
-                    { formElements }
-                </Form.Row>
-            );
+        const schema = yup.object({
+            weight: yup.number().required('Weight is required.'),
+            weight_unit: yup.string().required('Unit for weight is required.'),
+            waist: yup.number().required('Waist is required.'),
+            waist_unit: yup.string().required('Unit for waist is required.'),
         });
 
-        return (
-        <Container className={classes.Create}>
-            <Redirect to={this.props.redirect} />
-            <Row>
-                <Col sm='12'>
-                    <Form>
-                        { form }
-                        <Button variant='danger' onClick={this.onCreateWorkoutSessionHandler}>
-                            Submit
-                        </Button>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
-        );
+        const form = this.props.view ? (<Redirect to={this.props.redirect} />) : (
+
+                <Formik
+                    validationSchema={schema}
+                    onSubmit={this.onCreateWorkoutSessionHandler}
+                    initialValues={{
+                        weight: '',
+                        weight_unit: '',
+                        waist: '',
+                        waist_unit: ''
+                    }}
+                >
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                    }) => (
+                        <Form noValidate onSubmit={handleSubmit}>
+                            <Form.Group as={Row} controlId="weight">
+                                <Form.Group as={Col} sm={10} controlId="weight">
+                                    <Form.Label>Weight</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Weight"
+                                        name="weight"
+                                        value={values.weight}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.weight}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.weight}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} sm={2} controlId="weight_unit">
+                                    <Form.Label></Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.weight_unit}
+                                    >
+                                        <option value='lbs'>lbs</option>
+                                        <option value='kg'>kg</option>
+                                    </Form.Control>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.weight_unit}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Form.Group>
+
+                            <Form.Group as={Row} controlId="waist">
+                                <Form.Group as={Col} sm={10} controlId="waist">
+                                    <Form.Label>Waist</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Waist"
+                                        name="waist"
+                                        value={values.waist}
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.waist}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.waist}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                                <Form.Group as={Col} sm={2} controlId="waist_unit">
+                                    <Form.Label></Form.Label>
+                                    <Form.Control
+                                        as="select"
+                                        onChange={handleChange}
+                                        isInvalid={!!errors.waist_unit}
+                                    >
+                                        <option value='inch'>inch</option>
+                                        <option value='cm'>cm</option>
+                                    </Form.Control>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.waist_unit}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Form.Group>
+                            <div className={classes.Buttons}>
+                                <Button variant='danger' type="submit">{ btnChild }</Button>
+                                <Button variant='secondary' disabled={this.props.loading}>Cancel</Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            )
+        return form;
     }
 };
 

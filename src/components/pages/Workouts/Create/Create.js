@@ -14,16 +14,6 @@ class CreateWorkout extends Component {
     state = {
         validated: false
     }
-    //
-    // componentDidUpdate (prevProps) {
-    //     console.log(prevProps);
-    //     console.log(this.props);
-    //     if ( ( prevProps.view === null ||  prevProps.view === undefined ) && this.props.view !== null) {
-    //         console.log(333);
-    //         this.props.history.push( this.props.redirect )
-    //         return <Redirect to={ this.props.redirect} from='/workouts/create' />
-    //     }
-    // }
 
     onCreateWorkoutHandler = form => {
         this.setState({ validated: true });
@@ -31,9 +21,6 @@ class CreateWorkout extends Component {
             data: form,
             token: this.props.token
         });
-        // console.log(this.props.redirect);
-        // this.props.history.push( this.props.redirect );
-        // return <Redirect to={ this.props.redirect} />;
     }
 
    render () {
