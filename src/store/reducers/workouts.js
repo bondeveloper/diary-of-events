@@ -28,7 +28,6 @@ const setViewed = ( state, action ) => {
     });
 };
 
-
 const renderComponent = ( state, action ) => {
     return  updateObject ( state, {
         redirect: action.redirect,
