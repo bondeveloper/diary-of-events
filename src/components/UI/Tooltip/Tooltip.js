@@ -1,8 +1,7 @@
 import React from 'react';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Button from 'react-bootstrap/Button';
-import Image from 'react-bootstrap/Image';
+import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const renderTooltip = props=> {
@@ -13,7 +12,6 @@ const renderTooltip = props=> {
 );}
 
 const CustomTooltip = props => {
-    console.log(props);
     return (
         ['top', 'right', 'bottom', 'left'].map((placement) => (
             <OverlayTrigger
@@ -26,12 +24,12 @@ const CustomTooltip = props => {
                 }
             >
                 <Button variant="secondary">
-                    <FontAwesomeIcon 
+                    <FontAwesomeIcon
                         icon='plus-circle'
                         onClick={ () => this.sessionCreateHandler(this.props.workout._id)}
                         />
                 </Button>
-               
+
             </OverlayTrigger>
         ))
     )

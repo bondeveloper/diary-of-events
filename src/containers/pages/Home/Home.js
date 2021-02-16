@@ -11,7 +11,6 @@ import classes from './Home.module.css';
 
 class Home extends Component {
 
-
     showSigninHandler = ( event ) => {
         event.preventDefault();
         this.props.onShowSignin( this.props.hideSignup );

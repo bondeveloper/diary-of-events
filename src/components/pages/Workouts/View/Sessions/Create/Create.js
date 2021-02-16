@@ -25,11 +25,11 @@ class WorkoutSessionCreate extends Component {
 
     onCreateWorkoutSessionHandler = event => {
         this.props.onCreateWorkoutSession({
-            data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ), 
+            data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ),
             id: this.props.match.params.id,
             token: this.props.token
         });
-    } 
+    }
 
     render () {
         let form = formObjectToArray( this.state.form ).map( ele => {
@@ -46,7 +46,7 @@ class WorkoutSessionCreate extends Component {
                                 <Form.Label htmlFor={ele.key} srOnly>
                                 { ele.settings.label }
                                 </Form.Label>
-                                <Form.Control 
+                                <Form.Control
                                     type={ ele.settings.type }
                                     id={ele.key}
                                     placeholder={ ele.settings.config.placeholder }
@@ -68,9 +68,9 @@ class WorkoutSessionCreate extends Component {
                                 <Form.Label htmlFor={ele.key} srOnly>
                                     unit
                                 </Form.Label>
-                                <Form.Control 
-                                    as="select" 
-                                    defaultValue="Choose..." 
+                                <Form.Control
+                                    as="select"
+                                    defaultValue="Choose..."
                                     id={ ele.key }
                                     onChange={ event => this.inputChangedHandler( event, ele.key )} >
                                     <option> { ele.settings.config.placeholder }...</option>
@@ -86,7 +86,7 @@ class WorkoutSessionCreate extends Component {
 
             return (
                 <Form.Row className="align-items-center" key={ ele.key }>
-                    { formElements }                 
+                    { formElements }
                 </Form.Row>
             );
         });
@@ -110,7 +110,6 @@ class WorkoutSessionCreate extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         token: state.signin.token,
         redirect: state.workouts.redirect

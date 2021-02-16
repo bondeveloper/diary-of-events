@@ -4,7 +4,7 @@ import Toast from 'react-bootstrap/Toast';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-import { transformUnderscoreCaseToSentenceCase, excludeKeyFromObj } from '../../../shared/utility';
+import { transformUnderscoreCaseToSentenceCase } from '../../../shared/utility';
 
 import classes from './Table.module.css';
 
@@ -20,6 +20,9 @@ class CustomTable extends Component {
                 break;
             case 'delete':
                 this.props.deleteClicked( data );
+                break;
+            default:
+            console.log('default');
         }
     }
 
@@ -27,7 +30,7 @@ class CustomTable extends Component {
         return [...data].map( values => {
             const pk = values[key];
             let valuesCopy = {...values};
-            
+
             for ( let x of exclude ) {
                 delete valuesCopy[x];
             }
@@ -48,18 +51,18 @@ class CustomTable extends Component {
             );
         });
     };
-    
+
     renderTableColumnNames = (data, key, exclude) => {
         return [...data].slice(0,1).map( values => {
             const pk = values[key];
             let valuesCopy = {...values};
-                
+
             for ( let x of exclude ) {
                 delete valuesCopy[x];
             }
 
             const tableColumnNames = Object.keys( valuesCopy ).map( x => {
-    
+
                 return (
                     <th key={x}>{ transformUnderscoreCaseToSentenceCase( x ) }</th>
                     )
@@ -76,7 +79,7 @@ class CustomTable extends Component {
     toggleShow = () => this.setState({ show: !this.state.show});
 
     render () {
-             
+
         const table = this.props.data && this.props.data.length > 0 ? (
             <Table striped bordered hover responsive="sm">
                 <thead>

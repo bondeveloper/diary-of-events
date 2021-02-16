@@ -39,7 +39,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "api": "nodemon app.js"
+    "api": "nodemon app.js",
+    "dev": "npm run start && npm run api"
   },
   "eslintConfig": {
     "extends": [

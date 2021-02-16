@@ -2,8 +2,6 @@ import { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import asyncComponent from './hoc/asyncComponent/asyncComponent';
-
 import * as actions from './store/actions/index';
 
 import Layout from './hoc/Layout/Layout';
@@ -14,19 +12,9 @@ import WorkoutCreate from './components/pages/Workouts/Create/Create';
 import Signout from './components/Auth/Signout/Signout';
 import WorkoutList from './components/pages/Workouts/List/List';
 
-const asyncWorkouts = asyncComponent(() => {
-  return import('./components/pages/Workouts/List/List');
-});
-
-const asyncHome = asyncComponent(() => {
-  return import('./containers/pages/Home/Home');
-});
-
 class App extends Component {
     componentDidMount () {
         this.props.onCheckAuth();
-        console.log( this.props.isAuth);
-        console.log( this.props.redirect);
         this.props.history.push( this.props.redirect );
         return <Redirect to={ this.props.redirect }/>;
     }

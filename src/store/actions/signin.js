@@ -4,7 +4,6 @@ import Cookie from 'js-cookie';
 import { REQUEST_SIGNIN_SUCCESS, REQUEST_SIGNOUT_SUCCESS, REQUEST_SIGNIN_FAILED, REQUEST_SIGNIN_STARTED, RENDER_SIGNIN_COMPONENT } from "./actionTypes"
 
 const requestSuccess = token => {
-    console.log(666);
     return {
         type: REQUEST_SIGNIN_SUCCESS,
         token: token,
@@ -13,7 +12,6 @@ const requestSuccess = token => {
         errors: [],
     };
 };
-
 
 const requestStarted = () => {
     return {
@@ -78,8 +76,6 @@ export const showSignin = () => {
 
 export const signout = () => {
     Cookie.remove('token');
-    console.log(55555555555);
-    // return { redirect: '/', type: REQUEST_SIGNOUT_SUCCESS,};
     return dispatch => {
         dispatch({
             type: REQUEST_SIGNOUT_SUCCESS,

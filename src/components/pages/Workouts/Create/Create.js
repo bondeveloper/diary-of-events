@@ -1,115 +1,129 @@
 import React, { Component } from 'react';
 
-import { workoutForm, formInputChanged } from '../../../../shared/form-utility';
-import { formObjectToArray, tranformPascalCaseToUnderscoreCase, mapKeyToValue } from '../../../../shared/utility';
 import Aux from '../../../../hoc/Aux/Aux';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import { Col, Form, Button, Spinner} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 import classes from './Create.module.css';
 import * as actions from '../../../../store/actions/index';
 
 class CreateWorkout extends Component {
     state = {
-        form: workoutForm,
         validated: false
     }
+    //
+    // componentDidUpdate (prevProps) {
+    //     console.log(prevProps);
+    //     console.log(this.props);
+    //     if ( ( prevProps.view === null ||  prevProps.view === undefined ) && this.props.view !== null) {
+    //         console.log(333);
+    //         this.props.history.push( this.props.redirect )
+    //         return <Redirect to={ this.props.redirect} from='/workouts/create' />
+    //     }
+    // }
 
-    inputChangedHandler = ( event, key ) => {
-        this.setState({ form: formInputChanged( this.state.form, event, key ) });
-    }
-
-    onCreateWorkout = () => {
+    onCreateWorkoutHandler = form => {
+        this.setState({ validated: true });
         this.props.onCreateWorkout({
-            data: tranformPascalCaseToUnderscoreCase( mapKeyToValue( this.state.form ) ),
-            token: this.props.token 
-        })
+            data: form,
+            token: this.props.token
+        });
+        // console.log(this.props.redirect);
+        // this.props.history.push( this.props.redirect );
+        // return <Redirect to={ this.props.redirect} />;
     }
 
    render () {
-    
-    let form = formObjectToArray( this.state.form ).map( ele => {
-        let formElements = null;
+        const btnChild = this.props.loading ? (
+           <Aux>
+               <Spinner
+               as="span"
+               animation="grow"
+               size="sm"
+               role="status"
+               aria-hidden="true"
+               />
+               Loading...
+           </Aux>
+        ): 'submit';
 
-        switch ( ele.settings.type ) {
-            case 'input' :
-                formElements = (
-                    <Aux>
-                        <Col xs="auto" className="my-1">
-                            <Form.Label> { ele.settings.label } </Form.Label>
-                        </Col>
-                        <Col sm={6} className="my-1">
-                            <Form.Label htmlFor={ele.key} srOnly>
-                            { ele.settings.label }
-                            </Form.Label>
-                            <Form.Control 
-                                type={ ele.settings.type }
-                                id={ele.key}
-                                placeholder={ ele.settings.config.placeholder }
-                                onChange={ event => this.inputChangedHandler( event, ele.key ) }/>
-                        </Col>
-                    </Aux>
-                );
-                break;
-            case 'select' :
-                const optionsData = ele.settings.config.options;
-                const options = Object.keys( optionsData ).map( key => {
-                    return (
-                        <option value={ key } key={key}> { optionsData[key] }</option>
-                    )
-                });
-                formElements = (
-                    <Aux>
-                        <Col sm={4} className="my-1">
-                            <Form.Label htmlFor={ele.key} srOnly>
-                                unit
-                            </Form.Label>
-                            <Form.Control 
-                                as="select" 
-                                defaultValue="Choose..." 
-                                id={ ele.key }
-                                onChange={ event => this.inputChangedHandler( event, ele.key )} >
-                                <option> { ele.settings.config.placeholder }...</option>
-                                { options }
-                            </Form.Control>
-                        </Col>
-                    </Aux>
-                );
-                break;
-            default:
-                console.log( ele.settings.type );
-        }
+        const schema = yup.object({
+            name: yup.string().required(),
+            description: yup.string().required(),
+        });
 
-        return (
-            <Form.Row className="align-items-center" key={ ele.key }>
-                { formElements }                 
-            </Form.Row>
-        );
-    });
+        const form = this.props.view ? (<Redirect to={this.props.redirect} />) : (
 
-    return (
-    <Container className={classes.Create}>
-        <Form>
-            <Redirect to={this.props.redirect} />
-            { form }
-            <Button variant='danger' onClick={this.onCreateWorkout}>
-                Submit
-            </Button>
-        </Form>
-    </Container>
-    );
-   }
+                <Formik
+                    validationSchema={schema}
+                    onSubmit={this.onCreateWorkoutHandler}
+                    initialValues={{
+                        name: '',
+                        description: ''
+                    }}
+                >
+                    {({
+                        handleSubmit,
+                        handleChange,
+                        handleBlur,
+                        values,
+                        touched,
+                        isValid,
+                        errors,
+                    }) => (
+                        <Form noValidate onSubmit={handleSubmit}>
+                            <Form.Group as={Col} controlId="name">
+                              <Form.Label>Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Name"
+                                name="name"
+                                value={values.name}
+                                onChange={handleChange}
+                                isInvalid={!!errors.name}
+                              />
+                              <Form.Control.Feedback type="invalid">
+                                {errors.name}
+                              </Form.Control.Feedback>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId="description">
+                                <Form.Label>Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    placeholder="Description"
+                                    name="description"
+                                    value={values.description}
+                                    onChange={handleChange}
+                                    isInvalid={!!errors.description}
+                                />
+                                  <Form.Control.Feedback type="invalid">
+                                    {errors.description}
+                                  </Form.Control.Feedback>
+                            </Form.Group>
+                            <div className={classes.Buttons}>
+                                <Button variant='danger' type="submit">{ btnChild }</Button>
+                                <Button variant='secondary' disabled={this.props.loading}>Cancel</Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            )
+        return form;
+
+
+    }
 }
 
 const mapStateToProps = state => {
     return {
         token: state.signin.token,
         view: state.workouts.view,
-        redirect: state.workouts.redirect
+        redirect: state.workouts.redirect,
+        loading: state.workouts.loading
     }
 }
 

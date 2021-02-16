@@ -15,9 +15,6 @@ export const mapKeyToValue = data => {
 }
 
 export const formObjectToArray = obj => {
-    if ( obj.objValue) {
-        console.log(obj);
-    }
     let arr = [];
 
     for ( let key in obj) {

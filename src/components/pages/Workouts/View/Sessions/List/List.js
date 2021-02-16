@@ -38,8 +38,7 @@ class WorkoutSessionList extends Component {
                 displayTimes = ` ${ moment( session.start ).format(' HH:mm:ss')} - ${ moment( session.end ).format(' HH:mm:ss') }`;
             }else if ( session.start && !session.end  ) {
                 displayTimes = ` in progress since  ${ moment( session.start ).format('MMM DD yyyy HH:mm:ss') }  `;
-                startEndBtn = <Button variant='outline-warning' onClick={ () => this.updateTimesHandler( session._id, 'end' ) }>end</Button>;
-                console.log(1);
+                startEndBtn = <Button variant='outline-warning' onClick={ () => this.updateTimesHandler( session._id, 'end' ) }>end</Button>
             }else {
                 displayTimes = 'Session not started';
                 startEndBtn = <Button variant='outline-primary' size='sm' onClick={ () => this.updateTimesHandler( session._id, 'start' ) }>start</Button>
@@ -63,7 +62,7 @@ class WorkoutSessionList extends Component {
                                     </ul>
                                     { startEndBtn }
                                     <Button variant='outline-danger' size='sm' onClick={ () => this.deleteSessionHandler( session._id ) }>delete</Button>
-                                    
+
                                 </Card.Body>
                                 </Accordion.Collapse>
                             </Card>
@@ -71,7 +70,7 @@ class WorkoutSessionList extends Component {
                     </Col>
                 );
         });
-    
+
         return (
             <Row>
                 <div className={classes.Sessions}>

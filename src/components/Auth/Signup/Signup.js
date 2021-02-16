@@ -5,8 +5,6 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 
 import * as actions from '../../../store/actions/index';
-import { formObjectToArray, mapKeyToValue } from '../../../shared/utility';
-import { signupForm, formInputChanged} from '../../../shared/form-utility';
 
 import classes from './Signup.module.css';
 import { Form, Alert, Spinner } from 'react-bootstrap';
@@ -134,7 +132,6 @@ class Signup extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         isAuth: state.signin.token !== null,
         errors: state.signup.errors,

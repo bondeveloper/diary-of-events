@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Form, Alert, Button, Spinner, Col, InputGroup } from 'react-bootstrap';
+import { Form, Alert, Button, Spinner, Col } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
