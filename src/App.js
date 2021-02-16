@@ -12,6 +12,7 @@ import WorkoutView from './components/pages/Workouts/View/View';
 import WorkoutSessionCreate from './components/pages/Workouts/View/Sessions/Create/Create'
 import WorkoutCreate from './components/pages/Workouts/Create/Create';
 import Signout from './components/Auth/Signout/Signout';
+import WorkoutList from './components/pages/Workouts/List/List';
 
 const asyncWorkouts = asyncComponent(() => {
   return import('./components/pages/Workouts/List/List');
@@ -22,14 +23,18 @@ const asyncHome = asyncComponent(() => {
 });
 
 class App extends Component {
-  componentDidMount () {
-    this.props.onCheckAuth();
-  }
+    componentDidMount () {
+        this.props.onCheckAuth();
+        console.log( this.props.isAuth);
+        console.log( this.props.redirect);
+        this.props.history.push( this.props.redirect );
+        return <Redirect to={ this.props.redirect }/>;
+    }
 
   render () {
    let routes =  <Router>
           <Switch>
-            <Route path='/' exact component={ Home } />
+            <Route path='/' exact  component={ Home } />
           </Switch>
     </Router>;
 
@@ -41,11 +46,12 @@ class App extends Component {
             <Route path='/workouts/:id/sessions/create' component={WorkoutSessionCreate} />
             <Route path='/workouts/create' component={WorkoutCreate} />
             <Route path='/workouts/:id' component={WorkoutView} />
-            <Route path='/workouts' exact component={asyncWorkouts} />
+            <Route path='/workouts' exact component={WorkoutList} />
+            <Redirect to='/workouts' from='/' />
           </Switch>
         </Router>
       );
-  }
+    }
 
     return (
       <Layout auth={this.props.isAuth}>
@@ -56,9 +62,9 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state);
   return {
-    isAuth: state.signin.token !== null
+    isAuth: state.signin.token !== null,
+    redirect: state.signin.redirect
   };
 };
 

@@ -19,14 +19,9 @@ class Signin extends Component {
     }
 
     componentDidMount () {
-        this.props.onCheckAuth();
-        console.log(this.props.isAuth);
-        if ( this.props.isAuth ) {
-            this.props.history.push(this.props.redirect);
-            return  <Redirect to={ this.props.redirect} />;
-        }
         this.props.onSigninShow();
     }
+
 
     inputChangedHandler = ( event, key ) => {
         this.setState({ form: formInputChanged( this.state.form, event, key) });
@@ -35,6 +30,8 @@ class Signin extends Component {
     onSigninHandler = form => {
         this.setState({ validated: true });
         this.props.onSignin( form );
+
+        console.log( this.props.redirect );
         this.props.history.push( this.props.redirect );
         return <Redirect to={ this.props.redirect} />;
     }
@@ -48,7 +45,7 @@ class Signin extends Component {
             </Alert>
         ): null;
 
-        let redirect = this.props.isAuth ? <Redirect to={this.props.redirect} /> : null;
+        // let redirect = this.props.isAuth ? <Redirect to='/workouts' /> : null;
 
         const signinBtnChild = this.props.loading ? (
             <Aux>
@@ -126,7 +123,6 @@ class Signin extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log( state );
     return {
         isAuth: state.signin.token !== null,
         redirect: state.signin.redirect,

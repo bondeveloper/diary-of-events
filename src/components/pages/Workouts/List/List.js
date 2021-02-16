@@ -17,12 +17,13 @@ import Table from '../../../UI/Table/Table';
 
 class WorkoutList extends Component {
 
-    // componentDidMount () {
-    //     if ( this.props.isAuth ) {
-    //         this.props.history.push(this.props.redirect)
-    //         this.props.onFetchWorkouts( this.props.token );
-    //     }
-    // }
+    componentDidMount () {
+        console.log( this.props.isAuth );
+        if ( this.props.isAuth ) {
+            this.props.history.push(this.props.redirect)
+            this.props.onFetchWorkouts( this.props.token );
+        }
+    }
 
 
     viewWorkoutHandler = data => {
@@ -83,6 +84,7 @@ class WorkoutList extends Component {
 };
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
         isAuth: state.signin.token !== null,
         token: state.signin.token,

@@ -11,13 +11,6 @@ import classes from './Home.module.css';
 
 class Home extends Component {
 
-    componentDidMount () {
-        this.props.onCheckAuth();
-        if ( this.props.isAuth ) {
-            this.props.history.push(this.props.redirect);
-            return  <Redirect to={ this.props.redirect} />;
-        }
-    }
 
     showSigninHandler = ( event ) => {
         event.preventDefault();
@@ -28,7 +21,6 @@ class Home extends Component {
         const text = this.props.hideSignup ? "Don't have an account yet?" : "Already have an account?" ;
         return (
             <div className={classes.Home}>
-                <Redirect to={this.props.redirect} />
                 <div className={classes.Auth}>
                     { auth }
                     <div className={classes.ShowSignin}>
@@ -42,7 +34,6 @@ class Home extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         hideSignup: state.signup.hide,
         isAuth: state.signin.token !== null,

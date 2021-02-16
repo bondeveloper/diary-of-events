@@ -8,19 +8,14 @@ import * as actions from '../../../store/actions/index';
 class Signout extends Component {
     componentDidMount () {
         this.props.onSignout();
-        console.log(this.props.redirect);
-
     }
 
     render () {
-        console.log(123123123);
-        this.props.history.push('/');
         return <Redirect to='/' />;
     }
 }
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         redirect: state.signin.redirect,
         isAuth: state.signin.token !== null
