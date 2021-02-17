@@ -97,6 +97,7 @@ class WorkoutSessionList extends Component {
     }
 };
 const mapStateToProps = state => {
+    console.log(state);
     return {
         token: state.signin.token,
         view: state.workouts.view,

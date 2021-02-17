@@ -21,15 +21,14 @@ class WorkoutView extends Component {
     }
 
     renderCreateWorkoutSessionComponentHandler = data => {
-        // this.props.history.push(`/workouts/${data._id}/sessions/create`);
-        // return <Redirect to={`/workouts/${data._id}/sessions/create`} />
         this.props.onRenderCreateWorkoutSessionComponent( data );
     }
 
     render () {
+        const redirect = this.props.redirect ? <Redirect to={this.props.redirect} /> : null;
         return (
             <Container fluid className={classes.View}>
-                <Redirect to={this.props.redirect} />
+                { redirect }
                 <Row>
                     <Col xs='12'>
                         <h4>{this.props.workout ? this.props.workout.name : null}</h4>
