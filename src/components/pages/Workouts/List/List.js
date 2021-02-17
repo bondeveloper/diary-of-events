@@ -57,11 +57,13 @@ class WorkoutList extends Component {
                 viewClicked={this.viewWorkoutHandler}
                 deleteClicked={this.deleteWorkoutHandler}
             />
-        )
+        );
+
+        const redirect = this.props.shouldRedirect && this.props.redirect ? <Redirect to={ this.props.redirect } /> : null;
 
         return (
             <Container fluid className={classes.List}>
-                <Redirect to={ this.props.redirect } />
+                { redirect }
                 <Row>
                     <Col xs={12}>
                         <FontAwesomeIcon
@@ -79,6 +81,7 @@ class WorkoutList extends Component {
 };
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
         isAuth: state.signin.token !== null,
         token: state.signin.token,
@@ -91,7 +94,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps  = dispatch => {
     return {
         onFetchWorkouts: token => dispatch( actions.fetchWorkouts( token ) ),
-        onSetViewed: workout => dispatch( actions.setViewedWorkout( workout ) ),
         onDeleteWorkout: data => dispatch( actions.deleteWorkout( data )),
         onRenderCreateComponent: () => dispatch( actions.renderCreateWorkout() ),
         onRenderViewComponent: data => dispatch( actions.renderViewWorkout( data ) )

@@ -5,7 +5,7 @@ import Aux from '../../../../hoc/Aux/Aux';
 const nav = props => {
     const links = props.auth ? (
         <Aux>
-            <Nav.Link href='/workouts'>Workouts</Nav.Link>
+            <Nav.Link href='/'>Workouts</Nav.Link>
             <Nav.Link href='/signout'>signout</Nav.Link>
         </Aux>
     ) : (

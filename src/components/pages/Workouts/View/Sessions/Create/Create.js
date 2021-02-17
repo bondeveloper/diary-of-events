@@ -14,7 +14,7 @@ import Aux from '../../../../../../hoc/Aux/Aux';
 
 class WorkoutSessionCreate extends Component {
     state = {
-        validated: false
+        validated: false,
     }
 
     inputChangedHandler = ( event, key ) => {
@@ -56,7 +56,11 @@ class WorkoutSessionCreate extends Component {
             waist_unit: yup.string().required('Unit for waist is required.'),
         });
 
-        const form = this.props.isCancel ? (<Redirect to={this.props.redirect} />) : (
+        if( this.props.shouldRedirect ) {
+            console.log(this.props);
+        }
+
+        const form = this.props.shouldRedirect && this.props.redirect ? (<Redirect to={this.props.redirect} />) : (
 
                 <Formik
                     validationSchema={schema}
@@ -156,12 +160,13 @@ class WorkoutSessionCreate extends Component {
 };
 
 const mapStateToProps = state => {
+    console.log(state);
     return {
         token: state.signin.token,
         redirect: state.workouts.redirect,
         loading: state.workouts.loading,
         view: state.workouts.view,
-        isCancel: state.workouts.isCancel,
+        shouldRedirect: state.workouts.shouldRedirect,
     }
 }
 

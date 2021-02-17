@@ -22,6 +22,10 @@ class CreateWorkout extends Component {
             token: this.props.token
         });
     }
+    onCancelCreateWorkoutHandler = () => {
+        this.props.history.push('/workouts');
+        return <Redirect to='/workouts' />;
+    }
 
    render () {
         const btnChild = this.props.loading ? (
@@ -47,6 +51,7 @@ class CreateWorkout extends Component {
                 <Formik
                     validationSchema={schema}
                     onSubmit={this.onCreateWorkoutHandler}
+                    onReset={this.onCancelCreateWorkoutHandler}
                     initialValues={{
                         name: '',
                         description: ''
@@ -60,8 +65,9 @@ class CreateWorkout extends Component {
                         touched,
                         isValid,
                         errors,
+                        handleReset,
                     }) => (
-                        <Form noValidate onSubmit={handleSubmit}>
+                        <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                             <Form.Group as={Col} controlId="name">
                               <Form.Label>Name</Form.Label>
                               <Form.Control
@@ -93,7 +99,7 @@ class CreateWorkout extends Component {
                             </Form.Group>
                             <div className={classes.Buttons}>
                                 <Button variant='danger' type="submit">{ btnChild }</Button>
-                                <Button variant='secondary' disabled={this.props.loading}>Cancel</Button>
+                                <Button variant='secondary' type="reset" disabled={this.props.loading} >Cancel</Button>
                             </div>
                         </Form>
                     )}
@@ -117,6 +123,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onCreateWorkout: data => dispatch( actions.createWorkout( data ))
+        // onCancelCreateWorkout: data => dispatch( actions.cancelCreateWorkout() ),
     }
 }
 

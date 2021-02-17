@@ -16,19 +16,24 @@ import classes from './View.module.css';
 import Sessions from './Sessions/List/List';
 
 class WorkoutView extends Component {
-    renderCreateWorkoutSessionComponentHandler = data => {
-        this.props.onRenderCreateWorkoutSessionComponent( data );
-        this.props.history.push('/workouts/'+data._id+'/sessions/create');
-        // <Redirect to={ '/workouts/'+pk+'/sessions/create' } />
+    state = {
+        view: this.props.view
     }
+
+    renderCreateWorkoutSessionComponentHandler = data => {
+        // this.props.history.push(`/workouts/${data._id}/sessions/create`);
+        // return <Redirect to={`/workouts/${data._id}/sessions/create`} />
+        this.props.onRenderCreateWorkoutSessionComponent( data );
+    }
+
     render () {
-        return(
+        return (
             <Container fluid className={classes.View}>
-                <Redirect to={ this.props.redirect } />
+                <Redirect to={this.props.redirect} />
                 <Row>
                     <Col xs='12'>
-                        <h4>{this.props.workout.name}</h4>
-                        <p>{this.props.workout.description}</p>
+                        <h4>{this.props.workout ? this.props.workout.name : null}</h4>
+                        <p>{this.props.workout ? this.props.workout.description : null}</p>
                     </Col>
                 </Row>
                 <Row>
@@ -40,14 +45,13 @@ class WorkoutView extends Component {
                         className={classes.CreateBtn} />
                     </Col>
                     <Col xs='12'>
-                        <Sessions sessions={this.props.workout.sessions} id={this.props.match.params.id}/>
+                        <Sessions />
                     </Col>
                 </Row>
             </Container>
-         );
+        );
     }
 };
-
 
 const mapStateToProps = state => {
     return {

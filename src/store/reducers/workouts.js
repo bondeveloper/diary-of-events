@@ -6,7 +6,8 @@ import {
     REQUEST_WORKOUTS_FETCHED,
     REQUEST_WORKOUT_CREATED,
     REQUEST_WORKOUTS_STARTED,
-    REQUEST_WORKOUT_SESSION_CREATED
+    REQUEST_WORKOUT_SESSION_CREATED,
+    REQUEST_WORKOUT_SESSION_DELETED
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -35,7 +36,7 @@ const renderComponent = ( state, action ) => {
         view: action.view,
         loading: action.loading,
         list: action.list,
-        isCancel: action.isCancel,
+        shouldRedirect: action.shouldRedirect
     });
 }
 
@@ -46,6 +47,7 @@ const requestSuccess = ( state, action ) => {
         errors: action.errors,
         list: action.list,
         view: action.view,
+        shouldRedirect: action.shouldRedirect
     });
 }
 
@@ -67,6 +69,8 @@ const reducer = ( state = initialState, action ) => {
             return requestSuccess( state, action );
         case REQUEST_WORKOUT_SESSION_CREATED:
             return requestSuccess( state, action );
+        case REQUEST_WORKOUT_SESSION_DELETED:
+                return requestSuccess( state, action );
         default:
             return state;
     }
