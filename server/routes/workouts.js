@@ -36,7 +36,7 @@ router.get('/', verifyAuth, async ( req, res) => {
     }catch ( err ) {
         return res.status(400).send({ error: err });
     }
-    
+
 });
 
 
@@ -74,7 +74,7 @@ router.patch('/:workoutId', verifyAuth, async ( req, res ) => {
                 description: req.body.description,
             }
         }).where({ '_account': req.account._id });
-        
+
         res.status(200).send({ workout: updated });
 
     } catch( err ) {
@@ -82,6 +82,9 @@ router.patch('/:workoutId', verifyAuth, async ( req, res ) => {
     }
 
 });
+
+
+// Session Routes
 
 router.post('/:workoutId/sessions', verifyAuth, async ( req, res ) => {
     const { error } = workoutSessionValidation( req.body );
@@ -123,17 +126,24 @@ router.delete('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) 
 
 router.patch('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) => {
     try {
-        const workout = await Workout.findById(req.params.workoutId).where({ '_account': req.account._id });
-        if ( !workout ) return res.status(404).send({ error: 'Not Found!'});
+        const start = req.body.start ? req.body.start : null;
+        const end = req.body.end ? req.body.end : null;
 
-        let sess = workout.sessions.pop(req.params.sessionId);
-        if ( req.body.start ) sess.start = req.body.start;
-        if ( req.body.end ) sess.end = req.body.end;
+        let workout = await Workout.findOneAndUpdate({'_id':req.params.workoutId, '_account': req.account._id},
+         {'$set' : {
+                'sessions.$[el].start': start ,
+                'sessions.$[el].end': end
+            }
+        },
+        {
+             arrayFilters: [{'el._id': req.params.sessionId}],
+             new: true
+        }, async (err, suc) => {
+            console.log(err);
+            if (err) return res.status(404).send({ error: 'Not Found!'});
 
-        workout.sessions.push(sess);
-        await workout.save();
-
-        res.status(200).send({ workout: workout });
+            return res.status(200).send({ workout: suc });
+        });
 
     }catch ( err ) {
         res.status(400).send({ error: err });

@@ -10,7 +10,8 @@ import {
     REQUEST_WORKOUT_CREATED,
     REQUEST_WORKOUTS_STARTED,
     REQUEST_WORKOUT_SESSION_CREATED,
-    REQUEST_WORKOUT_SESSION_DELETED
+    REQUEST_WORKOUT_SESSION_DELETED,
+    REQUEST_WORKOUT_SESSION_UPDATED
     } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
@@ -197,14 +198,18 @@ export const createWorkoutSession = data => {
 }
 
 export const updateWorkoutSession = data => {
+    console.log(data);
     return dispatch => {
+        dispatch( requestStarted() );
+
         axios.patch(`/api/workouts/${data.id}/sessions/${data.sessionId}`, data.data, {
             headers: {
                 'auth-token' : data.token
             }
         })
         .then( res => {
-            dispatch( onRequestSuccess( WORKOUT_SESSION_UPDATE_SUCCESSFUL ) )
+            console.log(res.data.workout );
+            dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_SESSION_UPDATED, res.data.workout  ) )
         }).catch( err => {
             console.log(err);
         })

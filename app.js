@@ -19,9 +19,12 @@ const port = process.env.API_PORT || 8080;
 app.listen(port, () => console.log(`Listening on Port ${port}`));
 // Connect to Db
 mongoose.connect(
-    process.env.DB_CONN.replace('<password>', urlencode(process.env.DB_PASS)), 
-        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }, 
+    process.env.DB_CONN.replace('<password>', urlencode(process.env.DB_PASS)),
+        {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true,
+            useFindAndModify: false
+        },
         () => console.log('CONNECTED To MONGODB!')
     );
-
-

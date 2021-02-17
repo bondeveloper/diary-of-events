@@ -7,7 +7,8 @@ import {
     REQUEST_WORKOUT_CREATED,
     REQUEST_WORKOUTS_STARTED,
     REQUEST_WORKOUT_SESSION_CREATED,
-    REQUEST_WORKOUT_SESSION_DELETED
+    REQUEST_WORKOUT_SESSION_DELETED,
+    REQUEST_WORKOUT_SESSION_UPDATED
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -71,6 +72,8 @@ const reducer = ( state = initialState, action ) => {
             return requestSuccess( state, action );
         case REQUEST_WORKOUT_SESSION_DELETED:
                 return requestSuccess( state, action );
+        case REQUEST_WORKOUT_SESSION_UPDATED:
+            return requestSuccess( state, action );
         default:
             return state;
     }
