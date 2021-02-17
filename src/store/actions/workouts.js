@@ -8,7 +8,8 @@ import {
     RENDER_WORKOUT_COMPONENT,
     REQUEST_WORKOUTS_FETCHED,
     REQUEST_WORKOUT_CREATED,
-    REQUEST_WORKOUTS_STARTED
+    REQUEST_WORKOUTS_STARTED,
+    REQUEST_WORKOUT_SESSION_CREATED
     } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
@@ -81,14 +82,14 @@ const requestSuccess = ( component, type = RENDER_WORKOUT_COMPONENT, data = null
 }
 
 const render = data => {
-    const { redirect, view } = {...data};
+    const { redirect, view, isCancel } = {...data};
     return dispatch => {
         dispatch({
             type: RENDER_WORKOUT_COMPONENT,
             redirect: redirect,
             view: view,
-
-        })
+            isCancel: isCancel
+        });
     }
 }
 
@@ -97,7 +98,6 @@ const render = data => {
 export const fetchWorkouts = token => {
     return dispatch => {
         dispatch( renderWorkoutComponentStarted() );
-        console.log(22222);
 
         axios.get('/api/workouts/', {
             headers: {
@@ -124,7 +124,6 @@ export const createWorkout = data => {
             }
         })
         .then( res => {
-            console.log(res.data.workout);
             dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_CREATED, res.data.workout ) )
         }).catch( err => {
             console.log(err);
@@ -183,7 +182,8 @@ export const createWorkoutSession = data => {
             }
         })
         .then( res => {
-            dispatch( onRequestSuccess( 'workout', REQUEST_WORKOUT_CREATED, res.data.workout ) )
+            console.log(res.data.workout);
+            dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_SESSION_CREATED, res.data.workout ) )
         }).catch( err => {
             console.log(err);
         })
@@ -220,8 +220,17 @@ export const deleteWorkoutSession = data => {
     }
 }
 
+export const renderCreateWorkoutSession = data => {
+    return render( {
+        redirect: `/workouts/${data._id}/sessions/create`,
+        view: data,
+    } );
+}
 
-
-export const renderCreateWorkoutSession = ( pk ) => {
-    return render( { redirect: `/workouts/${pk}/sessions/create` } );
+export const cancelCreateWorkoutSession = data => {
+    return render({
+        redirect: `/workouts/${data._id}`,
+        view: data,
+        isCancel: true
+    })
 }

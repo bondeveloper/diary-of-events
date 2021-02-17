@@ -30,6 +30,10 @@ class WorkoutSessionCreate extends Component {
         });
     }
 
+    onCancelCreateWorkoutSessionHandler = () => {
+        this.props.onCancelCreateWorkoutSession( this.props.view );
+    }
+
     render () {
 
         const btnChild = this.props.loading ? (
@@ -52,11 +56,12 @@ class WorkoutSessionCreate extends Component {
             waist_unit: yup.string().required('Unit for waist is required.'),
         });
 
-        const form = this.props.view ? (<Redirect to={this.props.redirect} />) : (
+        const form = this.props.isCancel ? (<Redirect to={this.props.redirect} />) : (
 
                 <Formik
                     validationSchema={schema}
                     onSubmit={this.onCreateWorkoutSessionHandler}
+                    onReset={this.onCancelCreateWorkoutSessionHandler}
                     initialValues={{
                         weight: '',
                         weight_unit: '',
@@ -72,8 +77,9 @@ class WorkoutSessionCreate extends Component {
                         touched,
                         isValid,
                         errors,
+                        handleReset,
                     }) => (
-                        <Form noValidate onSubmit={handleSubmit}>
+                        <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                             <Form.Group as={Row} controlId="weight">
                                 <Form.Group as={Col} sm={10} controlId="weight">
                                     <Form.Label>Weight</Form.Label>
@@ -96,6 +102,7 @@ class WorkoutSessionCreate extends Component {
                                         onChange={handleChange}
                                         isInvalid={!!errors.weight_unit}
                                     >
+                                        <option value=''>...</option>
                                         <option value='lbs'>lbs</option>
                                         <option value='kg'>kg</option>
                                     </Form.Control>
@@ -127,6 +134,7 @@ class WorkoutSessionCreate extends Component {
                                         onChange={handleChange}
                                         isInvalid={!!errors.waist_unit}
                                     >
+                                        <option value=''>...</option>
                                         <option value='inch'>inch</option>
                                         <option value='cm'>cm</option>
                                     </Form.Control>
@@ -137,7 +145,7 @@ class WorkoutSessionCreate extends Component {
                             </Form.Group>
                             <div className={classes.Buttons}>
                                 <Button variant='danger' type="submit">{ btnChild }</Button>
-                                <Button variant='secondary' disabled={this.props.loading}>Cancel</Button>
+                                <Button variant='secondary' type="reset" disabled={this.props.loading}>Cancel</Button>
                             </div>
                         </Form>
                     )}
@@ -150,13 +158,17 @@ class WorkoutSessionCreate extends Component {
 const mapStateToProps = state => {
     return {
         token: state.signin.token,
-        redirect: state.workouts.redirect
+        redirect: state.workouts.redirect,
+        loading: state.workouts.loading,
+        view: state.workouts.view,
+        isCancel: state.workouts.isCancel,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateWorkoutSession: data => dispatch( actions.createWorkoutSession( data ))
+        onCreateWorkoutSession: data => dispatch( actions.createWorkoutSession( data )),
+        onCancelCreateWorkoutSession: data => dispatch( actions.cancelCreateWorkoutSession( data ) ),
     };
 };
 

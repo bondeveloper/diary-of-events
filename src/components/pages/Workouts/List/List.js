@@ -18,12 +18,7 @@ import Table from '../../../UI/Table/Table';
 class WorkoutList extends Component {
 
     componentDidMount () {
-        console.log(6666);
         this.props.onFetchWorkouts( this.props.token );
-        // if ( this.props.isAuth ) {
-        //     this.props.history.push(this.props.redirect)
-        //     this.props.onFetchWorkouts( this.props.token );
-        // }
     }
 
     viewWorkoutHandler = data => {
@@ -84,7 +79,6 @@ class WorkoutList extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log( state );
     return {
         isAuth: state.signin.token !== null,
         token: state.signin.token,

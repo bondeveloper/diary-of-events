@@ -16,9 +16,9 @@ import classes from './View.module.css';
 import Sessions from './Sessions/List/List';
 
 class WorkoutView extends Component {
-    sessionCreateHandler = pk => {
-        this.props.onRenderCreateComponent( pk );
-        this.props.history.push('/workouts/'+pk+'/sessions/create');
+    renderCreateWorkoutSessionComponentHandler = data => {
+        this.props.onRenderCreateWorkoutSessionComponent( data );
+        this.props.history.push('/workouts/'+data._id+'/sessions/create');
         // <Redirect to={ '/workouts/'+pk+'/sessions/create' } />
     }
     render () {
@@ -28,15 +28,15 @@ class WorkoutView extends Component {
                 <Row>
                     <Col xs='12'>
                         <h4>{this.props.workout.name}</h4>
-                        <p>{this.props.workout.description}</p>    
+                        <p>{this.props.workout.description}</p>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs='12'>
-                    <FontAwesomeIcon 
+                    <FontAwesomeIcon
                         data-toggle="tooltip" data-placement="left" title="Create Session"
                         icon='plus-circle'
-                        onClick={ () => this.sessionCreateHandler(this.props.workout._id)}
+                        onClick={ () => this.renderCreateWorkoutSessionComponentHandler(this.props.workout)}
                         className={classes.CreateBtn} />
                     </Col>
                     <Col xs='12'>
@@ -58,7 +58,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onRenderCreateComponent: pk =>  dispatch( actions.renderCreateWorkoutSession( pk ) )
+        onRenderCreateWorkoutSessionComponent: data =>  dispatch( actions.renderCreateWorkoutSession( data ) )
     }
 }
 

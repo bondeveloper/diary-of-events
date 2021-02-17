@@ -5,7 +5,8 @@ import {
     RENDER_WORKOUT_COMPONENT,
     REQUEST_WORKOUTS_FETCHED,
     REQUEST_WORKOUT_CREATED,
-    REQUEST_WORKOUTS_STARTED
+    REQUEST_WORKOUTS_STARTED,
+    REQUEST_WORKOUT_SESSION_CREATED
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -33,7 +34,8 @@ const renderComponent = ( state, action ) => {
         redirect: action.redirect,
         view: action.view,
         loading: action.loading,
-        list: action.list
+        list: action.list,
+        isCancel: action.isCancel,
     });
 }
 
@@ -62,7 +64,9 @@ const reducer = ( state = initialState, action ) => {
         case REQUEST_WORKOUT_CREATED:
             return requestSuccess( state, action );
         case REQUEST_WORKOUTS_STARTED:
-        return requestSuccess( state, action );
+            return requestSuccess( state, action );
+        case REQUEST_WORKOUT_SESSION_CREATED:
+            return requestSuccess( state, action );
         default:
             return state;
     }

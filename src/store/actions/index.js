@@ -22,5 +22,6 @@ export {
 
     renderCreateWorkout,
     renderViewWorkout,
-    renderCreateWorkoutSession
+    renderCreateWorkoutSession,
+    cancelCreateWorkoutSession,
 } from './workouts'
