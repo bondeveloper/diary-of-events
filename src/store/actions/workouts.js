@@ -1,10 +1,8 @@
 import axios from 'axios';
-import { useAsync } from 'react-async';
 
 import {
     WORKOUT_FETCH_SUCCESS,
     WORKOUT_VIEWED_SET,
-    WORKOUT_SESSION_UPDATE_SUCCESSFUL,
     RENDER_WORKOUT_COMPONENT,
     REQUEST_WORKOUTS_FETCHED,
     REQUEST_WORKOUT_CREATED,
@@ -33,6 +31,8 @@ const onRequestSuccess = ( component, type = RENDER_WORKOUT_COMPONENT, data = nu
         case 'workouts':
             redirect = '/workouts';
             break;
+        default:
+            redirect = '/';
     }
 
     if ( isList ) list = data; else view = data;
@@ -77,6 +77,8 @@ const requestSuccess = ( component, type = RENDER_WORKOUT_COMPONENT, data = null
             redirect = '/workouts';
             list = data;
             break;
+        default:
+            redirect = '/';
     }
 
     return {

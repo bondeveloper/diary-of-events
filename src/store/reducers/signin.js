@@ -25,13 +25,6 @@ const requestStarted = ( state, action ) => {
     });
 };
 
-const signoutSuccess = ( state, action ) => {
-    return updateObject( state, {
-        token: null,
-        redirect: action.redirect,
-        errors: action.errors,
-    });
-}
 const requestFailed = ( state, action ) => {
     return updateObject( state, {
         errors: action.errors,

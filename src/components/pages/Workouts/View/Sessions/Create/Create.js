@@ -8,17 +8,11 @@ import * as yup from 'yup';
 import classes from './Create.module.css';
 import * as actions from '../../../../../../store/actions/index';
 
-import { workoutSessionForm, formInputChanged } from '../../../../../../shared/form-utility';
-import { formObjectToArray, mapKeyToValue, tranformPascalCaseToUnderscoreCase } from '../../../../../../shared/utility';
 import Aux from '../../../../../../hoc/Aux/Aux';
 
 class WorkoutSessionCreate extends Component {
     state = {
         validated: false,
-    }
-
-    inputChangedHandler = ( event, key ) => {
-        this.setState({ form: formInputChanged( this.state.form, event, key ) });
     }
 
     onCreateWorkoutSessionHandler = form => {
@@ -162,7 +156,6 @@ class WorkoutSessionCreate extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         token: state.signin.token,
         redirect: state.workouts.redirect,
