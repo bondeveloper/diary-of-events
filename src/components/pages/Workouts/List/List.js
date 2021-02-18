@@ -49,7 +49,7 @@ class WorkoutList extends Component {
                             border-color: red;
                             `;
 
-        const tableContent = this.props.loading && true ? <RingLoader color='blue' loading='true' css={override} size={30} /> : (
+        const tableContent = this.props.loading ? <RingLoader color='blue' loading='true' css={override} size={30} /> : (
             <Table
                 data={this.props.workouts}
                 keyValue='_id'
@@ -81,7 +81,6 @@ class WorkoutList extends Component {
 };
 
 const mapStateToProps = state => {
-    console.log(state);
     return {
         isAuth: state.signin.token !== null,
         token: state.signin.token,

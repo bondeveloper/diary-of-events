@@ -54,9 +54,9 @@ class Signup extends Component {
         ): 'Signup';
 
         const schema = yup.object({
-            email: yup.string().required().email(),
-            password: yup.string().required(),
-            repeat_password: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match!'),
+            email: yup.string().required('Email is required!').email('Please enter a valid Email!'),
+            password: yup.string().required('Password is required!'),
+            repeat_password: yup.string().required('Please confirm password!').oneOf([yup.ref('password'), null], 'Passwords must match!'),
         });
 
         return (

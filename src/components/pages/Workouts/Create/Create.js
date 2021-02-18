@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Aux from '../../../../hoc/Aux/Aux';
-import { Col, Form, Button, Spinner} from 'react-bootstrap';
+import { Container, Row,Col, Form, Button, Spinner} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -68,7 +68,7 @@ class CreateWorkout extends Component {
                         handleReset,
                     }) => (
                         <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
-                            <Form.Group as={Col} controlId="name">
+                            <Form.Group controlId="name" as={Row}>
                               <Form.Label>Name</Form.Label>
                               <Form.Control
                                 type="text"
@@ -82,11 +82,10 @@ class CreateWorkout extends Component {
                                 {errors.name}
                               </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group as={Col} controlId="description">
+                            <Form.Group controlId="description" as={Row}>
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control
                                     as="textarea"
-                                    rows={3}
                                     placeholder="Description"
                                     name="description"
                                     value={values.description}
@@ -105,7 +104,13 @@ class CreateWorkout extends Component {
                     )}
                 </Formik>
             )
-        return form;
+        return (
+            <Container fluid className={classes.Create}>
+                <Row className='justify-content-center'>
+                    { form }
+                </Row>
+            </Container>
+        );
 
 
     }

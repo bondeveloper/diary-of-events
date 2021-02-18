@@ -198,7 +198,6 @@ export const createWorkoutSession = data => {
 }
 
 export const updateWorkoutSession = data => {
-    console.log(data);
     return dispatch => {
         dispatch( requestStarted() );
 

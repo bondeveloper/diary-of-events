@@ -30,8 +30,8 @@ class WorkoutSessionCreate extends Component {
         });
     }
 
-    onCancelCreateWorkoutSessionHandler = () => {
-        this.props.onCancelCreateWorkoutSession( this.props.view );
+    onCancelCreateWorkoutSessionHandler = view => {
+        this.props.onCancelCreateWorkoutSession( view );
     }
 
     render () {
@@ -56,16 +56,12 @@ class WorkoutSessionCreate extends Component {
             waist_unit: yup.string().required('Unit for waist is required.'),
         });
 
-        if( this.props.shouldRedirect ) {
-            console.log(this.props);
-        }
-
         const form = this.props.shouldRedirect && this.props.redirect ? (<Redirect to={this.props.redirect} />) : (
 
                 <Formik
                     validationSchema={schema}
                     onSubmit={this.onCreateWorkoutSessionHandler}
-                    onReset={this.onCancelCreateWorkoutSessionHandler}
+                    onReset={() => this.onCancelCreateWorkoutSessionHandler( this.props.view )}
                     initialValues={{
                         weight: '',
                         weight_unit: '',
@@ -85,7 +81,7 @@ class WorkoutSessionCreate extends Component {
                     }) => (
                         <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
                             <Form.Group as={Row} controlId="weight">
-                                <Form.Group as={Col} sm={10} controlId="weight">
+                                <Form.Group as={Col} sm={8} controlId="weight">
                                     <Form.Label>Weight</Form.Label>
                                     <Form.Control
                                         type="text"
@@ -99,14 +95,14 @@ class WorkoutSessionCreate extends Component {
                                         {errors.weight}
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group as={Col} sm={2} controlId="weight_unit">
-                                    <Form.Label></Form.Label>
+                                <Form.Group as={Col} sm={4} controlId="weight_unit">
+                                    <Form.Label className={classes.EmptyLabel}></Form.Label>
                                     <Form.Control
                                         as="select"
                                         onChange={handleChange}
                                         isInvalid={!!errors.weight_unit}
                                     >
-                                        <option value=''>...</option>
+                                        <option value='' >---</option>
                                         <option value='lbs'>lbs</option>
                                         <option value='kg'>kg</option>
                                     </Form.Control>
@@ -117,7 +113,7 @@ class WorkoutSessionCreate extends Component {
                             </Form.Group>
 
                             <Form.Group as={Row} controlId="waist">
-                                <Form.Group as={Col} sm={10} controlId="waist">
+                                <Form.Group as={Col} sm={8} controlId="waist">
                                     <Form.Label>Waist</Form.Label>
                                     <Form.Control
                                         type="text"
@@ -131,7 +127,7 @@ class WorkoutSessionCreate extends Component {
                                         {errors.waist}
                                     </Form.Control.Feedback>
                                 </Form.Group>
-                                <Form.Group as={Col} sm={2} controlId="waist_unit">
+                                <Form.Group as={Col} sm={4} controlId="waist_unit">
                                     <Form.Label></Form.Label>
                                     <Form.Control
                                         as="select"
@@ -155,7 +151,13 @@ class WorkoutSessionCreate extends Component {
                     )}
                 </Formik>
             )
-        return form;
+        return (
+            <Container fluid className={classes.Create}>
+                <Row className='justify-content-center' sm>
+                    { form }
+                </Row>
+            </Container>
+        );
     }
 };
 

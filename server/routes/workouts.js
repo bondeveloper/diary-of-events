@@ -126,18 +126,15 @@ router.delete('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) 
 
 router.patch('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) => {
     try {
-        const start = req.body.start ? req.body.start : null;
-        const end = req.body.end ? req.body.end : null;
+        let objForUpdate = {};
+        if ('start' in req.body) objForUpdate['sessions.$[el].start'] = req.body.start;
+        if ('end' in req.body) objForUpdate['sessions.$[el].end'] = req.body.end;
 
         let workout = await Workout.findOneAndUpdate({'_id':req.params.workoutId, '_account': req.account._id},
-         {'$set' : {
-                'sessions.$[el].start': start ,
-                'sessions.$[el].end': end
-            }
-        },
+        {'$set' : objForUpdate },
         {
-             arrayFilters: [{'el._id': req.params.sessionId}],
-             new: true
+            arrayFilters: [{'el._id': req.params.sessionId}],
+            new: true
         }, async (err, suc) => {
             console.log(err);
             if (err) return res.status(404).send({ error: 'Not Found!'});

@@ -9,13 +9,13 @@ import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faEye, faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faTrashAlt, faPlusCircle, faPlayCircle, faStopCircle } from '@fortawesome/free-solid-svg-icons';
 
 import signinReducer from './store/reducers/signin';
 import signupReducer from './store/reducers/signup';
 import workoutsReducer from './store/reducers/workouts';
 
-library.add(faEye, faTrashAlt, faPlusCircle);
+library.add( faEye, faTrashAlt, faPlusCircle, faPlayCircle, faStopCircle );
 
 
 const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;

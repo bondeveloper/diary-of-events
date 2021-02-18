@@ -51,8 +51,8 @@ class Signin extends Component {
         ): 'Signin';
 
         const schema = yup.object({
-            email: yup.string().required().email(),
-            password: yup.string().required(),
+            email: yup.string().required('Email is required!').email('Please enter a valid Email!'),
+            password: yup.string().required('Password is required!'),
         });
 
         return (
