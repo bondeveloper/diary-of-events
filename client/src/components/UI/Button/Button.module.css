@@ -1,0 +1,26 @@
+.Button {
+    width: 78px;
+    height: 40px;
+    border-radius: .5rem;
+    margin: 0 auto;
+}
+
+.Success {
+    background-color: rgba(255, 0, 0);
+    color: white;
+    border: none;
+}
+
+.Cancel {
+    background-color: white;
+    color:  rgba(255, 0, 0);
+    border: 1px solid  rgba(255, 0, 0);
+}
+
+.Button:focus {
+    outline: none;
+}
+
+.Button:disabled {
+    cursor: not-allowed;
+}
