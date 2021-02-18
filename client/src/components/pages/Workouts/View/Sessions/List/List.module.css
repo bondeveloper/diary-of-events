@@ -1,0 +1,32 @@
+.Sessions {
+    width: 100%;
+    margin-top: 50px;
+}
+.SessionTitle {
+    text-align: center;
+}
+
+.Buttons {
+    text-align: center;
+    margin-top: 20px;
+    box-sizing: border-box;
+}
+
+.Buttons svg {
+    display: inline;
+    margin-right: 20px;
+}
+
+.DeleteBtnIcon {
+    color: rgba( 255, 0, 0);
+}
+
+.StartBtnIcon {
+    color: rgba(0, 255, 0);
+}
+.StopBtnIcon {
+    color: rgba(0, 0, 255 )
+}
+.Accordion {
+    margin-bottom: 10px;
+}
