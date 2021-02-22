@@ -55,7 +55,10 @@ class Signup extends Component {
 
         const schema = yup.object({
             email: yup.string().required('Email is required!').email('Please enter a valid Email!'),
-            password: yup.string().required('Password is required!'),
+            password: yup.string().required('Password is required!').matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+            ),
             repeat_password: yup.string().required('Please confirm password!').oneOf([yup.ref('password'), null], 'Passwords must match!'),
         });
 
