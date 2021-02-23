@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { css } from "@emotion/core";
@@ -58,6 +61,17 @@ class WorkoutList extends Component {
 
         const redirect = this.props.shouldRedirect && this.props.redirect ? <Redirect to={ this.props.redirect } /> : null;
 
+        const display = this.props.errors && this.props.errors.length > 0 ? (
+            <Alert variant='danger'>
+                {
+                    this.props.errors.map( ( err, key ) => {
+                        const error = 'path' in err && err.path.length > 0 && err.path[0] === 'repeat_password' ? 'Password must match!':   err.message;
+                        return <span key={ key }>{ error } <br/></span>
+                    })
+                }
+            </Alert>
+        ): tableContent;
+
         return (
             <Container fluid className={classes.List}>
                 { redirect }
@@ -69,7 +83,7 @@ class WorkoutList extends Component {
                             onClick={this.createWorkoutHandler} className={classes.CreateBtn}/>
                     </Col>
                     <Col xs={12}>
-                        { tableContent }
+                        { display }
                     </Col>
                 </Row>
             </Container>
@@ -83,7 +97,8 @@ const mapStateToProps = state => {
         token: state.signin.token,
         redirect: state.workouts.redirect,
         workouts: state.workouts.list,
-        loading: state.workouts.loading
+        loading: state.workouts.loading,
+        errors: state.workouts.errors,
     }
 }
 
