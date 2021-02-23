@@ -1,10 +1,11 @@
 const Joi = require('joi');
 
-
 const signupValidation = data =>  {
     const schema = Joi.object({
         password: Joi.string()
-                    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'))
+                    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+                    )
                     .required(),
         repeat_password: Joi.ref('password'),
         email: Joi.string()
@@ -18,7 +19,9 @@ const signupValidation = data =>  {
 const signinValidation = data =>  {
     const schema = Joi.object({
         password: Joi.string()
-                    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'))
+                    .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                        'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+                    )
                     .required(),
         email: Joi.string()
                 .email()
