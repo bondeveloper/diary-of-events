@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
+import Alert from 'react-bootstrap/Alert';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,6 +37,17 @@ class Signin extends Component {
     render () {
         const showPasswordIcon = this.state.showPassword ? 'eye-slash' : 'eye';
 
+        const errors = this.props.errors && this.props.errors.length > 0 ? (
+            <Alert variant='danger'>
+                {
+                    this.props.errors.map( ( err, key ) => {
+                        const error = 'path' in err && err.path.length > 0 && err.path[0] === 'repeat_password' ? 'Password must match!':   err.message;
+                        return <span key={ key }>{ error } <br/></span>
+                    })
+                }
+            </Alert>
+        ): null;
+
         const signinBtnChild = this.props.loading ? (
             <Aux>
                 <Spinner
@@ -54,66 +66,75 @@ class Signin extends Component {
             password: yup.string().required('Password is required!'),
         });
 
-        return (
-        <Formik
-            validationSchema={schema}
-            onSubmit={this.onSigninHandler}
-            initialValues={{
-                email: '',
-                password: ''
-            }}
-        >
-        {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            isValid,
-            errors,
-        }) => (
-        <Form noValidate onSubmit={handleSubmit}>
-            <Form.Group as={Col} controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Email"
-                name="email"
-                value={values.email}
-                onChange={handleChange}
-                isInvalid={!!errors.email}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} controlId="password">
-                <Form.Label>Password</Form.Label>
-                <InputGroup className='mb-2'>
-                    <Form.Control
-                        type={ this.state.showPassword ? 'text' : 'password' }
-                        placeholder="Password"
-                        name="password"
-                        value={values.password}
+        const form = (
+            <Formik
+                validationSchema={schema}
+                onSubmit={this.onSigninHandler}
+                initialValues={{
+                    email: '',
+                    password: ''
+                }}
+            >
+            {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                isValid,
+                errors,
+            }) => (
+                <Form noValidate onSubmit={handleSubmit}>
+                    <Form.Group as={Col} controlId="email">
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Email"
+                        name="email"
+                        value={values.email}
                         onChange={handleChange}
-                        isInvalid={!!errors.password}
-                    />
-                    <InputGroup.Prepend>
-                        <InputGroup.Text>
-                            <FontAwesomeIcon icon={ showPasswordIcon } onClick={this.onShowPasswordToggle}/>
-                        </InputGroup.Text>
-                    </InputGroup.Prepend>
-                </InputGroup>
-                <Form.Control.Feedback type="invalid">
-                    {errors.password}
-                </Form.Control.Feedback>
-            </Form.Group>
-            <div className={classes.Buttons}>
-                <Button variant='danger' type="submit">{ signinBtnChild }</Button>
-            </div>
-        </Form>
-      )}
-    </Formik>);
+                        isInvalid={!!errors.email}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.email}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="password">
+                        <Form.Label>Password</Form.Label>
+                        <InputGroup className='mb-2'>
+                            <Form.Control
+                                type={ this.state.showPassword ? 'text' : 'password' }
+                                placeholder="Password"
+                                name="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                isInvalid={!!errors.password}
+                            />
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={ showPasswordIcon } onClick={this.onShowPasswordToggle}/>
+                                </InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password}
+                            </Form.Control.Feedback>
+                        </InputGroup>
+
+                    </Form.Group>
+                    <div className={classes.Buttons}>
+                        <Button variant='danger' type="submit">{ signinBtnChild }</Button>
+                    </div>
+                </Form>
+              )}
+            </Formik>
+        );
+
+        return (
+            <Aux>
+                { errors }
+                { form }
+            </Aux>
+        );
     };
 };
 
