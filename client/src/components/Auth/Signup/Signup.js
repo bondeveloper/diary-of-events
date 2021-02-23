@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Col} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import * as actions from '../../../store/actions/index';
 
@@ -13,7 +16,9 @@ import Aux from '../../../hoc/Aux/Aux';
 
 class Signup extends Component {
     state = {
-        validated: false
+        validated: false,
+        showPassword: false,
+        showPasswordConfirm: false,
     }
 
     onSignupHandler =  form => {
@@ -28,7 +33,13 @@ class Signup extends Component {
         this.props.onCancelSignup();
     }
 
+    onShowPasswordToggle = () => this.setState({ showPassword: !this.state.showPassword});
+    onShowPasswordConfirmToggle = () => this.setState({ showPasswordConfirm: !this.state.showPasswordConfirm});
+
     render () {
+        const showPasswordIcon = this.state.showPassword ? 'eye-slash' : 'eye';
+        const showPasswordConfirmIcon = this.state.showPasswordConfirm ? 'eye-slash' : 'eye';
+
         const errors = this.props.errors && this.props.errors.length > 0 ? (
             <Alert variant='danger'>
                 {
@@ -54,12 +65,12 @@ class Signup extends Component {
         ): 'Signup';
 
         const schema = yup.object({
-            // email: yup.string().required('Email is required!').email('Please enter a valid Email!'),
-            // password: yup.string().required('Password is required!').matches(
-            //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-            //     'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-            // ),
-            // repeat_password: yup.string().required('Please confirm password!').oneOf([yup.ref('password'), null], 'Passwords must match!'),
+            email: yup.string().required('Email is required!').email('Please enter a valid Email!'),
+            password: yup.string().required('Password is required!').matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                'Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
+            ),
+            repeat_password: yup.string().required('Please confirm password!').oneOf([yup.ref('password'), null], 'Passwords must match!'),
         });
 
         return (
@@ -98,31 +109,45 @@ class Signup extends Component {
                 </Form.Group>
                 <Form.Group as={Col} controlId="password">
                     <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        value={values.password}
-                        onChange={handleChange}
-                        isInvalid={!!errors.password}
-                    />
-                      <Form.Control.Feedback type="invalid">
+                    <InputGroup className='mb-2'>
+                        <Form.Control
+                            type={ this.state.showPassword ? 'text' : 'password' }
+                            placeholder="Password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            isInvalid={!!errors.password}
+                        />
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>
+                                <FontAwesomeIcon icon={ showPasswordIcon } onClick={this.onShowPasswordToggle}/>
+                            </InputGroup.Text>
+                        </InputGroup.Prepend>
+                    </InputGroup>
+                    <Form.Control.Feedback type="invalid">
                         {errors.password}
-                      </Form.Control.Feedback>
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group as={Col} controlId="repeat_password">
                     <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="confirm password"
-                        name="repeat_password"
-                        value={values.repeat_password}
-                        onChange={handleChange}
-                        isInvalid={!!errors.repeat_password}
-                    />
-                      <Form.Control.Feedback type="invalid">
+                    <InputGroup className='mb-2'>
+                        <Form.Control
+                            type={ this.state.showPasswordConfirm ? 'text' : 'password' }
+                            placeholder="Confirm Password"
+                            name="repeat_password"
+                            value={values.repeat_password}
+                            onChange={handleChange}
+                            isInvalid={!!errors.repeat_password}
+                        />
+                        <InputGroup.Prepend>
+                            <InputGroup.Text>
+                                <FontAwesomeIcon icon={ showPasswordConfirmIcon } onClick={this.onShowPasswordConfirmToggle}/>
+                            </InputGroup.Text>
+                        </InputGroup.Prepend>
+                    </InputGroup>
+                    <Form.Control.Feedback type="invalid">
                         {errors.repeat_password}
-                      </Form.Control.Feedback>
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <div className={classes.Buttons}>
                     <Button variant='danger' type="submit">{ signupBtnChild }</Button>
