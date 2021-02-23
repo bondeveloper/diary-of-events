@@ -3,7 +3,6 @@ const Workout = require('../models/Workout');
 const router = express.Router();
 const verifyAuth = require('./token');
 const { workoutValidation, workoutSessionValidation } = require('../utilities/validation');
-// const { workoutSessionSanitizer } = require('../utilities/sanitizer');
 
 router.post('/', verifyAuth, async ( req, res ) => {
     const { error } = workoutValidation(req.body);
@@ -50,7 +49,6 @@ router.get('/:workoutId', verifyAuth, async ( req, res ) => {
     }
 
 });
-
 
 router.delete('/:workoutId', verifyAuth, async ( req, res ) => {
     try {
@@ -125,6 +123,7 @@ router.delete('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) 
 });
 
 router.patch('/:workoutId/sessions/:sessionId', verifyAuth, async ( req, res ) => {
+
     try {
         let objForUpdate = {};
         if ('start' in req.body) objForUpdate['sessions.$[el].start'] = req.body.start;

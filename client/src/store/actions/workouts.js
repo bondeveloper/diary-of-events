@@ -9,41 +9,15 @@ import {
     REQUEST_WORKOUTS_STARTED,
     REQUEST_WORKOUT_SESSION_CREATED,
     REQUEST_WORKOUT_SESSION_DELETED,
-    REQUEST_WORKOUT_SESSION_UPDATED
+    REQUEST_WORKOUT_SESSION_UPDATED,
+    REQUEST_WORKOUT_FAILED,
+    REQUEST_WORKOUT_SESSION_VIEW_ACTION_FAILED
     } from './actionTypes';
 
 export const fetchWorkoutsSuccessful = data => {
     return {
         type: WORKOUT_FETCH_SUCCESS,
         list: data
-    }
-}
-
-const onRequestSuccess = ( component, type = RENDER_WORKOUT_COMPONENT, data = null, isList = false) => {
-    let redirect = '';
-    let view, list = null;
-    let shouldRedirect = false;
-    switch ( component ) {
-        case 'workout':
-            redirect = `/workouts/${data._id}`;
-            shouldRedirect = true;
-            break;
-        case 'workouts':
-            redirect = '/workouts';
-            break;
-        default:
-            redirect = '/';
-    }
-
-    if ( isList ) list = data; else view = data;
-
-    return {
-        type: type,
-        redirect: redirect,
-        view: view,
-        loading: false,
-        list: list,
-        shouldRedirect: shouldRedirect
     }
 }
 
@@ -87,8 +61,37 @@ const requestSuccess = ( component, type = RENDER_WORKOUT_COMPONENT, data = null
         view: view,
         loading: false,
         list: list,
-        shouldRedirect: shouldRedirect
+        shouldRedirect: shouldRedirect,
+        errors: [],
     }
+}
+
+const requestFailed = err => {
+    let errors = [];
+    switch( err.status ) {
+        case 400:
+            errors = err.data.errors;
+            break;
+        case 500:
+            errors.push({ message: err.statusText})
+            errors = errors;
+    }
+    return {
+        type: REQUEST_WORKOUT_FAILED,
+        errors: errors,
+        redirect: '/workouts',
+        loading: false
+    };
+}
+
+const workoutSessionViewActionFailed = data => {
+    const setFailed = requestFailed( data.error );
+
+    return {
+        ...setFailed,
+        type: REQUEST_WORKOUT_SESSION_VIEW_ACTION_FAILED,
+        view: data.view
+    };
 }
 
 const render = data => {
@@ -118,7 +121,7 @@ export const fetchWorkouts = token => {
             dispatch( requestSuccess( 'workouts', REQUEST_WORKOUTS_FETCHED, res.data.workouts, true));
         })
         .catch( err => {
-            console.log(err);
+            dispatch( requestFailed( err.response ) );
         });
     };
 };
@@ -135,7 +138,7 @@ export const createWorkout = data => {
         .then( res => {
             dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_CREATED, res.data.workout ) )
         }).catch( err => {
-            console.log(err);
+            dispatch( requestFailed( err.response ) );
         })
     }
 }
@@ -148,9 +151,9 @@ export const deleteWorkout = data => {
             }
         })
         .then( res => {
-            dispatch( onRequestSuccess( 'workouts', res.data ) )
+            dispatch( requestSuccess( 'workouts', res.data ) )
         }).catch( err => {
-            console.log(err);
+            dispatch( requestFailed( err.response ) );
         })
     }
 }
@@ -163,14 +166,16 @@ export const renderViewWorkout = data => {
     return render( {
         redirect: `/workouts/${ data._id }`,
         view: data,
-        shouldRedirect: true
+        shouldRedirect: true,
+        errors: [],
     } );
 }
 
 export const viewedWorkout = data => {
     return {
         type: WORKOUT_VIEWED_SET,
-        view: data
+        view: data,
+        errors: [],
     }
 }
 
@@ -194,7 +199,7 @@ export const createWorkoutSession = data => {
         .then( res => {
             dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_SESSION_CREATED, res.data.workout ) );
         }).catch( err => {
-            console.log(err);
+            dispatch( requestFailed( err.response ) );
         })
     }
 }
@@ -203,7 +208,7 @@ export const updateWorkoutSession = data => {
     return dispatch => {
         dispatch( requestStarted() );
 
-        axios.patch(`/api/workouts/${data.id}/sessions/${data.sessionId}`, data.data, {
+        axios.patch(`/api/workouts/${data.view._id}/sessions/${data.sessionId}`, data.data, {
             headers: {
                 'auth-token' : data.token
             }
@@ -212,7 +217,10 @@ export const updateWorkoutSession = data => {
             console.log(res.data.workout );
             dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_SESSION_UPDATED, res.data.workout  ) )
         }).catch( err => {
-            console.log(err);
+            dispatch( workoutSessionViewActionFailed( {
+                error: err.response,
+                view: data.view
+            } ) );
         })
     }
 }
@@ -221,7 +229,7 @@ export const deleteWorkoutSession = data => {
     return dispatch => {
         dispatch( requestStarted() );
 
-        axios.delete(`/api/workouts/${data.id}/sessions/${data.sessionId}`, {
+        axios.delete(`/api/workouts/${data.view._id}/sessions/${data.sessionId}`, {
             headers: {
                 'auth-token' : data.token
             }
@@ -229,7 +237,10 @@ export const deleteWorkoutSession = data => {
         .then( res => {
             dispatch( requestSuccess( 'workout', REQUEST_WORKOUT_SESSION_DELETED, res.data.workout ) )
         }).catch( err => {
-            console.log(err);
+            dispatch( workoutSessionViewActionFailed( {
+                error: err.response,
+                view: data.view
+            } ) );
         })
     }
 }
@@ -238,6 +249,7 @@ export const renderCreateWorkoutSession = data => {
     return render( {
         redirect: `/workouts/${data._id}/sessions/create`,
         view: data,
+        errors: [],
     } );
 }
 
@@ -245,6 +257,7 @@ export const cancelCreateWorkoutSession = data => {
     return render({
         redirect: `/workouts/${data._id}`,
         view: data,
-        shouldRedirect: true
+        shouldRedirect: true,
+        errors: [],
     })
 }

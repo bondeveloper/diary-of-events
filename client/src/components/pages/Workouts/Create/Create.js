@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 
 import Aux from '../../../../hoc/Aux/Aux';
-import { Container, Row, Form, Button, Spinner} from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
+import Col from 'react-bootstrap/Col';
+
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -28,6 +35,17 @@ class CreateWorkout extends Component {
     }
 
    render () {
+        const errors = this.props.errors && this.props.errors.length > 0 ? (
+           <Alert variant='danger'>
+               {
+                   this.props.errors.map( ( err, key ) => {
+                       const error = 'path' in err && err.path.length > 0 && err.path[0] === 'repeat_password' ? 'Password must match!':   err.message;
+                       return <span key={ key }>{ error } <br/></span>
+                   })
+               }
+           </Alert>
+        ): null;
+
         const btnChild = this.props.loading ? (
            <Aux>
                <Spinner
@@ -47,7 +65,6 @@ class CreateWorkout extends Component {
         });
 
         const form = this.props.view ? (<Redirect to={this.props.redirect} />) : (
-
                 <Formik
                     validationSchema={schema}
                     onSubmit={this.onCreateWorkoutHandler}
@@ -68,7 +85,7 @@ class CreateWorkout extends Component {
                         handleReset,
                     }) => (
                         <Form noValidate onSubmit={handleSubmit} onReset={handleReset}>
-                            <Form.Group controlId="name" as={Row}>
+                            <Form.Group controlId="name" as={Col}>
                               <Form.Label>Name</Form.Label>
                               <Form.Control
                                 type="text"
@@ -82,7 +99,7 @@ class CreateWorkout extends Component {
                                 {errors.name}
                               </Form.Control.Feedback>
                             </Form.Group>
-                            <Form.Group controlId="description" as={Row}>
+                            <Form.Group controlId="description" as={Col}>
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control
                                     as="textarea"
@@ -106,9 +123,8 @@ class CreateWorkout extends Component {
             )
         return (
             <Container fluid className={classes.Create}>
-                <Row className='justify-content-center'>
-                    { form }
-                </Row>
+                { errors }
+                { form }
             </Container>
         );
 
@@ -121,7 +137,8 @@ const mapStateToProps = state => {
         token: state.signin.token,
         view: state.workouts.view,
         redirect: state.workouts.redirect,
-        loading: state.workouts.loading
+        loading: state.workouts.loading,
+        errors: state.workouts.errors,
     }
 }
 
