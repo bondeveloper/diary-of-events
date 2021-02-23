@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Row, Accordion, Col, Card, Button } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Accordion from 'react-bootstrap/Accordion';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { Redirect } from 'react-router-dom'
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -12,7 +18,7 @@ class WorkoutSessionList extends Component {
 
     updateTimesHandler = ( sessionId, key ) => {
         this.props.onUpdateWorkoutSession( {
-            id: this.props.view._id,
+            view: this.props.view,
             token: this.props.token,
             sessionId: sessionId,
             data: {
@@ -23,12 +29,23 @@ class WorkoutSessionList extends Component {
     deleteSessionHandler = sessionId => {
         this.props.onDeleteWorkoutSession({
             sessionId: sessionId,
-            id: this.props.view._id,
-            token: this.props.token
+            token: this.props.token,
+            view: this.props.view, //pass view incase of server error
         });
     }
 
     render () {
+        const errors = this.props.errors && this.props.errors.length > 0 ? (
+            <Alert variant='danger'>
+                {
+                    this.props.errors.map( ( err, key ) => {
+                        const error = 'path' in err && err.path.length > 0 && err.path[0] === 'repeat_password' ? 'Password must match!':   err.message;
+                        return <span key={ key }>{ error } <br/></span>
+                    })
+                }
+            </Alert>
+        ): null;
+
         const sessionData = this.props.view ? ( this.props.view.sessions.map ( session => {
             let displayTimes, startEndBtn = null;
             if ( session.start && session.end  ) {
@@ -74,6 +91,7 @@ class WorkoutSessionList extends Component {
         return (
 
             <Container fluid>
+                { errors }
                 <Row>
                     { sessionData }
                 </Row>
@@ -87,6 +105,7 @@ const mapStateToProps = state => {
         view: state.workouts.view,
         loading: state.workouts.loading,
         shouldRedirect: state.workouts.shouldRedirect,
+        errors: state.workouts.errors,
     };
 };
 const mapDispatchToProps = dispatch => {

@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Col} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import * as actions from '../../../store/actions/index';
 
@@ -13,7 +16,9 @@ import Aux from '../../../hoc/Aux/Aux';
 
 class Signup extends Component {
     state = {
-        validated: false
+        validated: false,
+        showPassword: false,
+        showPasswordConfirm: false,
     }
 
     onSignupHandler =  form => {
@@ -28,7 +33,13 @@ class Signup extends Component {
         this.props.onCancelSignup();
     }
 
+    onShowPasswordToggle = () => this.setState({ showPassword: !this.state.showPassword});
+    onShowPasswordConfirmToggle = () => this.setState({ showPasswordConfirm: !this.state.showPasswordConfirm});
+
     render () {
+        const showPasswordIcon = this.state.showPassword ? 'eye-slash' : 'eye';
+        const showPasswordConfirmIcon = this.state.showPasswordConfirm ? 'eye-slash' : 'eye';
+
         const errors = this.props.errors && this.props.errors.length > 0 ? (
             <Alert variant='danger'>
                 {
@@ -62,7 +73,7 @@ class Signup extends Component {
             repeat_password: yup.string().required('Please confirm password!').oneOf([yup.ref('password'), null], 'Passwords must match!'),
         });
 
-        return (
+        const form = (
             <Formik
                 validationSchema={schema}
                 onSubmit={this.onSignupHandler}
@@ -81,57 +92,81 @@ class Signup extends Component {
                 isValid,
                 errors,
             }) => (
-            <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group as={Col} controlId="email">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Email"
-                    name="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    isInvalid={!!errors.email}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.email}
-                  </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        value={values.password}
+                <Form noValidate onSubmit={handleSubmit}>
+                    <Form.Group as={Col} controlId="email">
+                      <Form.Label>Email</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Email"
+                        name="email"
+                        value={values.email}
                         onChange={handleChange}
-                        isInvalid={!!errors.password}
-                    />
+                        isInvalid={!!errors.email}
+                      />
                       <Form.Control.Feedback type="invalid">
-                        {errors.password}
+                        {errors.email}
                       </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group as={Col} controlId="repeat_password">
-                    <Form.Label>Confirm Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="confirm password"
-                        name="repeat_password"
-                        value={values.repeat_password}
-                        onChange={handleChange}
-                        isInvalid={!!errors.repeat_password}
-                    />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.repeat_password}
-                      </Form.Control.Feedback>
-                </Form.Group>
-                <div className={classes.Buttons}>
-                    <Button variant='danger' type="submit">{ signupBtnChild }</Button>
-                    <Button variant='secondary' disabled={this.props.loading} onClick={this.onCancelSignupHandler}>Cancel</Button>
-                </div>
-            </Form>
-          )}
-        </Formik>);
-    }
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="password">
+                        <Form.Label>Password</Form.Label>
+                        <InputGroup className='mb-2'>
+                            <Form.Control
+                                type={ this.state.showPassword ? 'text' : 'password' }
+                                placeholder="Password"
+                                name="password"
+                                value={values.password}
+                                onChange={handleChange}
+                                isInvalid={!!errors.password}
+                            />
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={ showPasswordIcon } onClick={this.onShowPasswordToggle}/>
+                                </InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password}
+                            </Form.Control.Feedback>
+                        </InputGroup>
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="repeat_password">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <InputGroup className='mb-2'>
+                            <Form.Control
+                                type={ this.state.showPasswordConfirm ? 'text' : 'password' }
+                                placeholder="Confirm Password"
+                                name="repeat_password"
+                                value={values.repeat_password}
+                                onChange={handleChange}
+                                isInvalid={!!errors.repeat_password}
+                            />
+                            <InputGroup.Prepend>
+                                <InputGroup.Text>
+                                    <FontAwesomeIcon icon={ showPasswordConfirmIcon } onClick={this.onShowPasswordConfirmToggle}/>
+                                </InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.repeat_password}
+                            </Form.Control.Feedback>
+                        </InputGroup>
+                    </Form.Group>
+
+                    <div className={classes.Buttons}>
+                        <Button variant='danger' type="submit">{ signupBtnChild }</Button>
+                        <Button variant='secondary' disabled={this.props.loading} onClick={this.onCancelSignupHandler}>Cancel</Button>
+                    </div>
+                </Form>
+              )}
+            </Formik>
+        );
+
+        return (
+            <Aux>
+                { errors }
+                { form }
+            </Aux>
+        );
+    };
 };
 
 const mapStateToProps = state => {

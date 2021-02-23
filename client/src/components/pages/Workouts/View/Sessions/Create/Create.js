@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { Container, Row, Col, Form, Spinner, Button } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -29,6 +35,16 @@ class WorkoutSessionCreate extends Component {
     }
 
     render () {
+        const errors = this.props.errors && this.props.errors.length > 0 ? (
+           <Alert variant='danger'>
+               {
+                   this.props.errors.map( ( err, key ) => {
+                       const error = 'path' in err && err.path.length > 0 && err.path[0] === 'repeat_password' ? 'Password must match!':   err.message;
+                       return <span key={ key }>{ error } <br/></span>
+                   })
+               }
+           </Alert>
+        ): null;
 
         const btnChild = this.props.loading ? (
            <Aux>
@@ -44,9 +60,9 @@ class WorkoutSessionCreate extends Component {
         ): 'submit';
 
         const schema = yup.object({
-            weight: yup.number().required('Weight is required.'),
+            weight: yup.number('Weight should be a number!').required('Weight is required.'),
             weight_unit: yup.string().required('Unit for weight is required.'),
-            waist: yup.number().required('Waist is required.'),
+            waist: yup.number('Waist should be a number!').required('Waist is required.'),
             waist_unit: yup.string().required('Unit for waist is required.'),
         });
 
@@ -147,9 +163,8 @@ class WorkoutSessionCreate extends Component {
             )
         return (
             <Container fluid className={classes.Create}>
-                <Row className='justify-content-center' sm>
-                    { form }
-                </Row>
+                { errors }
+                { form }
             </Container>
         );
     }
@@ -162,6 +177,7 @@ const mapStateToProps = state => {
         loading: state.workouts.loading,
         view: state.workouts.view,
         shouldRedirect: state.workouts.shouldRedirect,
+        errors: state.workouts.errors,
     }
 }
 

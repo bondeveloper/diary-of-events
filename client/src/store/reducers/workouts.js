@@ -8,7 +8,9 @@ import {
     REQUEST_WORKOUTS_STARTED,
     REQUEST_WORKOUT_SESSION_CREATED,
     REQUEST_WORKOUT_SESSION_DELETED,
-    REQUEST_WORKOUT_SESSION_UPDATED
+    REQUEST_WORKOUT_SESSION_UPDATED,
+    REQUEST_WORKOUT_FAILED,
+    REQUEST_WORKOUT_SESSION_VIEW_ACTION_FAILED,
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -21,13 +23,15 @@ const initialState = {
 
 const fetchSuccess = ( state, action ) => {
     return updateObject( state, {
-        list: action.list
+        list: action.list,
+        errors: action.errors,
     });
 };
 
 const setViewed = ( state, action ) => {
     return updateObject( state, {
-        view: action.view
+        view: action.view,
+        errors: action.errors,
     });
 };
 
@@ -37,7 +41,8 @@ const renderComponent = ( state, action ) => {
         view: action.view,
         loading: action.loading,
         list: action.list,
-        shouldRedirect: action.shouldRedirect
+        shouldRedirect: action.shouldRedirect,
+        errors: action.errors,
     });
 }
 
@@ -48,7 +53,23 @@ const requestSuccess = ( state, action ) => {
         errors: action.errors,
         list: action.list,
         view: action.view,
-        shouldRedirect: action.shouldRedirect
+        shouldRedirect: action.shouldRedirect,
+    });
+}
+
+const requestFailed = ( state, action ) => {
+    return updateObject( state, {
+        errors: action.errors,
+        loading: action.loading,
+        view: action.view
+    });
+}
+
+const requestViewActionFailed = ( state, action ) => {
+    return updateObject( state, {
+        errors: action.errors,
+        loading: action.loading,
+        view: action.view
     });
 }
 
@@ -74,6 +95,10 @@ const reducer = ( state = initialState, action ) => {
                 return requestSuccess( state, action );
         case REQUEST_WORKOUT_SESSION_UPDATED:
             return requestSuccess( state, action );
+        case REQUEST_WORKOUT_FAILED:
+            return requestFailed( state, action );
+        case REQUEST_WORKOUT_SESSION_VIEW_ACTION_FAILED:
+            return requestViewActionFailed( state, action );
         default:
             return state;
     }
