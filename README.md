@@ -36,7 +36,6 @@ yarn client
 ```
 and access the server via 
 ``` http://localhost:3000 ```
-This command will install all the dependencies needed to run the application on local
 
 ### `yarn dev`
 Run this command if you want to run both the client and the server with one command
