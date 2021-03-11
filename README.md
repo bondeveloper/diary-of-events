@@ -1,4 +1,4 @@
-# Diary of Events App
+# Diary of Events
 
 Sometime last year ( 2020 ) I started some workout challenges and I was recording the sessions that I did on a book ... a BOOK!.As a software developer I found this laughable. I have the capacity, so what better way to learn a new skill than solving this small challenge whose MVP was a simple one. The application helps manage and record workouts that I engage in and their respective sessions.
 
