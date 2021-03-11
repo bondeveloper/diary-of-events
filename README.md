@@ -1,6 +1,6 @@
 # Diary of Events App
 
-Sometime last year ( 2020 ) I started some workout challenges and I was recording the sessions that I did on a book ... a BOOK!.As a software developer I found this laughable. I have the capacity, so what better way to learn a new skill than solving this small challenge whose MVP was a simple one. The application helps manage and record workouts that I engage in which I stream from different platforms and their respective sessions.
+Sometime last year ( 2020 ) I started some workout challenges and I was recording the sessions that I did on a book ... a BOOK!.As a software developer I found this laughable. I have the capacity, so what better way to learn a new skill than solving this small challenge whose MVP was a simple one. The application helps manage and record workouts that I engage in and their respective sessions.
 
 
 ## Running the application on development
@@ -9,7 +9,7 @@ Sometime last year ( 2020 ) I started some workout challenges and I was recordin
 *  Copy the contents in the .env.example file onto a new .env file
 
 
-The application depends on Node and I suggest you install it from [here]() if you haven't already done so. Once node has been successfully installed....
+The application depends on Node and I suggest you install it from [here](https://nodejs.org/en/download/) if you haven't already done so. Once node has been successfully installed....
 
 #### server
 Run the following command on the cloned root directory
