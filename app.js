@@ -24,7 +24,7 @@ if ( process.env.NODE_ENV === 'production') {
     });
 }
 
-const port = process.env.API_PORT || 8080;
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => console.log(`Listening on Port ${port}`));
 // Connect to Db
