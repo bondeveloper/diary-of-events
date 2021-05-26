@@ -9,3 +9,4 @@ deployment:
         - /bin/cp yarn.lock $DEPLOYPATH
         - /bin/cp LICENSE $DEPLOYPATH
         - /bin/cp .env.example $DEPLOYPATH/.env
+        - cd $DEPLOYPATH && npm install
